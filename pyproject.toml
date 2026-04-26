@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smib"
+version = "0.1.0"
+description = "Transparent RMS/phasor-domain SMIB simulator for teaching."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "plotly>=5.18",
+    "ipywidgets>=8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["smib*"]
+
+[tool.pytest.ini_options]
+# Add the project root to sys.path so `from smib.X import Y` resolves
+# when pytest is invoked from this folder.
+pythonpath = ["."]
+testpaths = ["tests"]
