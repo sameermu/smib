@@ -1,0 +1,11 @@
+/
+/  smib Phase 1 — GENCLS dynamics file
+/  Bus 101 (gen), machine ID '1 '
+/
+/  H is in seconds on machine MVA base, D in pu torque per pu speed,
+/  X'd is transient reactance in pu on machine MVA base.
+/
+/  Format (one line per machine, comma-separated):
+/    BUS  'GENCLS'  ID  H  D  X'd
+/
+   101 'GENCLS' 1   4.0  0.0  0.30   /

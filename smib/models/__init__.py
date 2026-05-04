@@ -11,6 +11,7 @@ floor (see tests/) before being committed.
 """
 from .base import Model
 from .gencls import GENCLS
+from .genrou import GENROU
 from .pll import PLL, preset as pll_preset
 
-__all__ = ["Model", "GENCLS", "PLL", "pll_preset"]
+__all__ = ["Model", "GENCLS", "GENROU", "PLL", "pll_preset"]

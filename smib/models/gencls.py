@@ -188,15 +188,17 @@ class GENCLS(Model):
         I = self._last_I
         # Standard 5 (P, Q, |V|, Id, Iq) at the machine TERMINAL, in MACHINE dq.
         S = V * np.conj(I)
-        # Rotate into machine dq frame using the PSSE/Kundur convention:
-        # q-axis on positive real (aligned with E'), d-axis on positive imag.
-        # The rotation `j * exp(-j*delta)` brings the EMF (which has angle
-        # delta in global DQ) onto the positive real axis and puts d 90°
-        # behind it.  Then Iq = Re, Id = Im.  At steady state for an
-        # exporting machine: Iq > 0 (torque-producing), Id > 0 (lagging PF).
-        I_dq = 1j * I * np.exp(-1j * self.state["delta"])
-        I_q = float(I_dq.real)
-        I_d = float(I_dq.imag)
+        # Rotate into machine dq frame using the standard PSSE/Kundur
+        # convention (Park's transformation, d-axis 90° behind q-axis in
+        # the direction of rotation).  Decompose X·exp(-j·delta) so that:
+        #   X_q = Re(X·exp(-j·delta))     parallel to rotor q-axis (E')
+        #   X_d = -Im(X·exp(-j·delta))    along rotor d-axis (field direction)
+        # At steady state for an exporting lagging-PF generator:
+        #   I_q > 0 (torque-producing)
+        #   I_d > 0 (demagnetising)
+        I_rot = I * np.exp(-1j * self.state["delta"])
+        I_q = float(I_rot.real)
+        I_d = -float(I_rot.imag)
         return {
             "P": float(S.real),
             "Q": float(S.imag),

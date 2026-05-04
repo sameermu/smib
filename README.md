@@ -185,6 +185,23 @@ invokes black boxes is a script, not a teaching artefact. Four rules:
    visual, so colleagues never have to read the integrator source to
    understand what is happening per step.
 
+8. **Ship a PSSE benchmark for every phase.** Each phase delivers a
+   `psse/phaseN/` folder containing (a) a `.dyr` dynamics file with
+   the model parameters in PSSE syntax, (b) a psspy automation script
+   (`run_phaseN_fault.py`) that drives the same disturbance the smib
+   notebook simulates, and (c) a README with both GUI and psspy
+   instructions plus a table of smib reference numbers (V from PF,
+   $|E'|$, peak swing, mid-fault P/Q, CCT) so the user can cross-check
+   independently. Expected agreement is within ~3 % on all canonical
+   traces given matched integrator step size (smib $h = 2$ ms, set
+   PSSE `DELT = 0.002`). Two purposes: (i) **correctness floor** — if
+   smib and PSSE disagree on the same setup, one of them has a bug,
+   and the disagreement points at exactly which model / init step /
+   integrator detail to debug; (ii) **pedagogical confidence** —
+   colleagues trust PSSE, so showing smib reproduces PSSE lets them
+   trust smib too, and then use smib as a transparent way to
+   understand what PSSE is doing. See `psse/phase1/` as the template.
+
 These rules apply to every phase: GENCLS, GENROU + ST1A + PSS1A +
 TGOV1, IBR, GFM, SVC/STATCOM/SynCon, scenario browser, small-signal.
 Bake them in from the start of each new notebook rather than retrofit

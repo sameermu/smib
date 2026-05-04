@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img"
+     style="font-family:system-ui,-apple-system,sans-serif">
+  <title>d-axis Park equivalent circuit of a synchronous machine</title>
+  <desc>Shows how the three reactances X_d, X'_d, X"_d emerge from the same
+        Park d-axis equivalent circuit when different rotor branches are
+        active or have decayed.</desc>
+
+  <rect width="1000" height="620" fill="#FAFAFA"/>
+
+  <text x="500" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#1A1A1A">
+    d-axis equivalent circuit (Park form)
+  </text>
+  <text x="500" y="54" text-anchor="middle" font-size="13" fill="#555">
+    Same circuit at all times — the three reactances are the Thévenin equivalent looking into the stator at different timescales
+  </text>
+
+  <!-- ============= MAIN CIRCUIT (top) ============= -->
+  <g transform="translate(60, 90)">
+    <text x="430" y="-2" text-anchor="middle" font-size="13" font-weight="700" fill="#222">
+      Full d-axis circuit (always present)
+    </text>
+
+    <!-- Stator terminal -->
+    <circle cx="20" cy="80" r="4" fill="#222"/>
+    <text x="6" y="100" font-size="11" fill="#222">stator</text>
+    <text x="6" y="113" font-size="11" fill="#222">terminal</text>
+
+    <!-- Stator leakage X_l -->
+    <line x1="24" y1="80" x2="60" y2="80" stroke="#222" stroke-width="2"/>
+    <path d="M 60 80 L 70 70 L 80 90 L 90 70 L 100 90 L 110 70 L 120 90 L 130 80"
+          stroke="#222" stroke-width="2" fill="none"/>
+    <text x="95" y="62" text-anchor="middle" font-size="13" font-weight="700" fill="#0D47A1">X_l</text>
+    <text x="95" y="106" text-anchor="middle" font-size="10" fill="#666">leakage (~0.16)</text>
+
+    <!-- Junction -->
+    <line x1="130" y1="80" x2="200" y2="80" stroke="#222" stroke-width="2"/>
+    <circle cx="200" cy="80" r="3" fill="#222"/>
+
+    <!-- Mutual reactance X_ad (vertical, going down to ground rail) -->
+    <line x1="200" y1="80" x2="200" y2="120" stroke="#222" stroke-width="2"/>
+    <path d="M 200 120 L 210 130 L 190 140 L 210 150 L 190 160 L 210 170 L 200 180"
+          stroke="#222" stroke-width="2" fill="none"/>
+    <text x="226" y="155" font-size="13" font-weight="700" fill="#1B5E20">X_ad</text>
+    <text x="226" y="172" font-size="10" fill="#666">d-axis mutual</text>
+    <text x="226" y="186" font-size="10" fill="#666">stator↔rotor (~1.65)</text>
+
+    <!-- Branch upward continues to field + damper from junction at (200, 80) — actually they tap from the same node -->
+    <!-- Top wire continuing right -->
+    <line x1="200" y1="80" x2="380" y2="80" stroke="#222" stroke-width="2"/>
+
+    <!-- Field winding branch (vertical, right side) -->
+    <line x1="380" y1="80" x2="380" y2="120" stroke="#222" stroke-width="2"/>
+    <text x="380" y="105" text-anchor="middle" font-size="11" fill="#666">field</text>
+    <!-- field leakage Xfd -->
+    <path d="M 380 120 L 390 130 L 370 140 L 390 150 L 370 160 L 390 170 L 380 180"
+          stroke="#222" stroke-width="2" fill="none"/>
+    <text x="406" y="155" font-size="11" font-weight="700" fill="#BF360C">X_fd</text>
+    <!-- Field resistance R_fd -->
+    <line x1="380" y1="180" x2="380" y2="195" stroke="#222" stroke-width="2"/>
+    <rect x="370" y="195" width="20" height="30" fill="white" stroke="#222" stroke-width="2"/>
+    <text x="406" y="216" font-size="11" font-weight="700" fill="#BF360C">R_fd</text>
+    <!-- Voltage source E_fd -->
+    <line x1="380" y1="225" x2="380" y2="245" stroke="#222" stroke-width="2"/>
+    <circle cx="380" cy="260" r="14" fill="white" stroke="#222" stroke-width="2"/>
+    <text x="380" y="264" text-anchor="middle" font-size="11" font-weight="700">E_fd</text>
+    <line x1="380" y1="274" x2="380" y2="295" stroke="#222" stroke-width="2"/>
+
+    <!-- Damper winding branch (vertical, between mutual and field) -->
+    <line x1="290" y1="80" x2="290" y2="120" stroke="#222" stroke-width="2"/>
+    <text x="290" y="105" text-anchor="middle" font-size="11" fill="#666">damper</text>
+    <path d="M 290 120 L 300 130 L 280 140 L 300 150 L 280 160 L 300 170 L 290 180"
+          stroke="#222" stroke-width="2" fill="none"/>
+    <text x="316" y="155" font-size="11" font-weight="700" fill="#E65100">X_kd</text>
+    <line x1="290" y1="180" x2="290" y2="195" stroke="#222" stroke-width="2"/>
+    <rect x="280" y="195" width="20" height="30" fill="white" stroke="#222" stroke-width="2"/>
+    <text x="316" y="216" font-size="11" font-weight="700" fill="#E65100">R_kd</text>
+    <!-- Damper is shorted (no voltage source) -->
+    <line x1="290" y1="225" x2="290" y2="295" stroke="#222" stroke-width="2"/>
+
+    <!-- Ground rail -->
+    <line x1="180" y1="295" x2="400" y2="295" stroke="#222" stroke-width="2"/>
+    <line x1="200" y1="180" x2="200" y2="295" stroke="#222" stroke-width="2"/>
+    <!-- ground symbol on left -->
+    <line x1="190" y1="295" x2="190" y2="310" stroke="#222" stroke-width="2"/>
+    <line x1="180" y1="310" x2="200" y2="310" stroke="#222" stroke-width="2"/>
+    <line x1="184" y1="315" x2="196" y2="315" stroke="#222" stroke-width="2"/>
+    <line x1="188" y1="320" x2="192" y2="320" stroke="#222" stroke-width="2"/>
+
+    <!-- Annotations on right -->
+    <g transform="translate(470, 30)">
+      <rect width="430" height="290" rx="6" fill="white" stroke="#888"/>
+      <text x="15" y="20" font-size="13" font-weight="700" fill="#0D47A1">Reading the circuit:</text>
+      <text x="15" y="42" font-size="11" fill="#222">
+        <tspan font-weight="700" fill="#0D47A1">X_l</tspan> — stator leakage. Flux that does NOT link the rotor (slot
+      </text>
+      <text x="15" y="56" font-size="11" fill="#222">leakage, end-winding leakage). Always there, always small.</text>
+
+      <text x="15" y="82" font-size="11" fill="#222">
+        <tspan font-weight="700" fill="#1B5E20">X_ad</tspan> — d-axis mutual. The "ideal transformer" coupling
+      </text>
+      <text x="15" y="96" font-size="11" fill="#222">stator d-axis to rotor windings. Linearises around an</text>
+      <text x="15" y="110" font-size="11" fill="#222">operating point with saturation S_E(|ψ|) bending it.</text>
+
+      <text x="15" y="138" font-size="11" fill="#222">
+        <tspan font-weight="700" fill="#BF360C">X_fd, R_fd, E_fd</tspan> — field winding. The DC-excited rotor
+      </text>
+      <text x="15" y="152" font-size="11" fill="#222">winding controlled by the AVR. Long L/R: T'_d0 = L_ffd/R_fd ≈ 8 s.</text>
+      <text x="15" y="166" font-size="11" fill="#222">In GENCLS we hide this branch entirely (E_q = const).</text>
+
+      <text x="15" y="194" font-size="11" fill="#222">
+        <tspan font-weight="700" fill="#E65100">X_kd, R_kd</tspan> — d-axis damper winding. A shorted coil on
+      </text>
+      <text x="15" y="208" font-size="11" fill="#222">the rotor that exists ONLY to provide damping. Short L/R:</text>
+      <text x="15" y="222" font-size="11" fill="#222">T"_d0 = L_kkd/R_kd ≈ 0.03 s. After ~100 ms it's done.</text>
+
+      <text x="15" y="252" font-size="11" font-weight="700" fill="#222">Where the three Xs come from:</text>
+      <text x="15" y="268" font-size="11" fill="#222">Compute the Thévenin impedance looking into the stator</text>
+      <text x="15" y="282" font-size="11" fill="#222">terminal at three different "frequencies":</text>
+    </g>
+  </g>
+
+  <!-- ============= THE THREE REGIMES — BOTTOM STRIP ============= -->
+  <g transform="translate(40, 410)">
+    <text x="460" y="0" text-anchor="middle" font-size="13" font-weight="700" fill="#222">
+      Take the Thévenin reactance at three different frequencies
+    </text>
+
+    <!-- Block 1: subtransient — both rotor branches act as shorts -->
+    <g transform="translate(0, 20)">
+      <rect width="290" height="180" rx="6" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5"/>
+      <text x="145" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#BF360C">
+        ω → ∞  (just-after-disturbance)
+      </text>
+      <text x="145" y="40" text-anchor="middle" font-size="11" fill="#222">
+        both rotor inductors look like SHORTS
+      </text>
+      <text x="20" y="68" font-size="13" font-family="ui-monospace,monospace" fill="#222">X″_d = X_l + X_ad ‖ X_fd ‖ X_kd</text>
+      <text x="20" y="92" font-size="11" fill="#222">Three reactances in parallel give a small number,</text>
+      <text x="20" y="106" font-size="11" fill="#222">so X_l dominates. With Kundur: X″_d ≈ 0.23 pu.</text>
+      <text x="20" y="135" font-size="11" font-weight="700" fill="#BF360C">→ smallest reactance, biggest fault current</text>
+      <text x="20" y="158" font-size="11" fill="#666" font-style="italic">"the machine looks stiffest in its</text>
+      <text x="20" y="172" font-size="11" fill="#666" font-style="italic">first 50 ms — that's why generators dominate</text>
+    </g>
+
+    <!-- Block 2: transient — damper has decayed, only field branch is shorted -->
+    <g transform="translate(310, 20)">
+      <rect width="290" height="180" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+      <text x="145" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#0D47A1">
+        ω ~ 1/T″_d0  (~50 ms in)
+      </text>
+      <text x="145" y="40" text-anchor="middle" font-size="11" fill="#222">
+        damper has decayed; field still locks flux
+      </text>
+      <text x="20" y="68" font-size="13" font-family="ui-monospace,monospace" fill="#222">X′_d = X_l + X_ad ‖ X_fd</text>
+      <text x="20" y="92" font-size="11" fill="#222">Damper branch effectively gone — only field shunt</text>
+      <text x="20" y="106" font-size="11" fill="#222">remains. With Kundur: X′_d ≈ 0.30 pu.</text>
+      <text x="20" y="135" font-size="11" font-weight="700" fill="#0D47A1">→ intermediate; this is the GENCLS regime</text>
+      <text x="20" y="158" font-size="11" fill="#666" font-style="italic">"GENCLS holds E′ constant ⟹ assumes</text>
+      <text x="20" y="172" font-size="11" fill="#666" font-style="italic">field flux is locked, T'_d0 → ∞"</text>
+    </g>
+
+    <!-- Block 3: synchronous — both rotor branches open -->
+    <g transform="translate(620, 20)">
+      <rect width="290" height="180" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+      <text x="145" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1B5E20">
+        ω → 0  (steady state, &gt;5 s)
+      </text>
+      <text x="145" y="40" text-anchor="middle" font-size="11" fill="#222">
+        both rotor branches act as OPENS (DC blocked)
+      </text>
+      <text x="20" y="68" font-size="13" font-family="ui-monospace,monospace" fill="#222">X_d = X_l + X_ad</text>
+      <text x="20" y="92" font-size="11" fill="#222">Just stator leakage in series with the full mutual.</text>
+      <text x="20" y="106" font-size="11" fill="#222">With Kundur: X_d ≈ 1.81 pu (≈ X_l + X_ad).</text>
+      <text x="20" y="135" font-size="11" font-weight="700" fill="#1B5E20">→ largest reactance, "soft" steady state</text>
+      <text x="20" y="158" font-size="11" fill="#666" font-style="italic">"the AVR's job is to push more current</text>
+      <text x="20" y="172" font-size="11" fill="#666" font-style="italic">through this big X_d to hold |V_t| up"</text>
+    </g>
+  </g>
+</svg>
