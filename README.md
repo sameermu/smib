@@ -6,6 +6,48 @@ black box. Intended for teaching, benchmarking against PSSE, and
 sparring with the question "can an LLM-authored transparent stack match
 an industry simulator on a curated case?"
 
+## Project status
+
+Update this section as phases land.  Last update: Phase 2.0 in flight,
+GENROU model + foundations doc + PSSE Phase 1 benchmark complete.
+
+| Phase | Scope | Status |
+|---|---|---|
+| **0** — Skeleton | repo, solver, network, PF, scenarios, plotting, tests | ✅ done |
+| **1** — GENCLS | classical machine on SMIB, full notebook + PSSE benchmark | ✅ done |
+| **2.0** — GENROU bare | round-rotor 4-state two-axis transient model | 🔄 model done, simulator + notebook pending |
+| **2.1** — + ST1A AVR | static exciter, demonstrates LV reactive support boost | ⏳ pending |
+| **2.2** — + PSS1A | power system stabiliser, headline "with vs without PSS" plot | ⏳ pending |
+| **2.3** — + TGOV1 | turbine governor, primary frequency response | ⏳ pending |
+| **3** — IBR generic | REGC_A + REEC_A + REPC_A, weak-grid SCR sweep | ⏳ pending |
+| **4** — IBR grid-forming | REGFM_A1, side-by-side with Phase 3 | ⏳ pending |
+| **5** — Reactive support | SVSMO3 SVC, CSTATT STATCOM, SynCon | ⏳ pending |
+| **6** — Scenario browser | dedicated ipywidgets explorer over all phases | ⏳ pending |
+| **7** — Small-signal | numerical eigenvalues + Prony analysis | ⏳ pending |
+
+**What "done" means for a phase**: model + tests + colleague-facing
+notebook + PSSE benchmark folder all landed and pushed, with all 8
+pedagogy rules applied.
+
+**Phase 2.0 inner status** (since it's where we are):
+
+- ✅ `smib/models/genrou.py` — 4-state two-axis transient model, init
+  passes self-consistency at machine epsilon, flat-line drift < 4e-14°
+  over 5 s.
+- ✅ `docs/genrou_physical_foundations.md` — full physical explanation
+  of every parameter with two SVG equivalent-circuit diagrams.
+- ✅ `smib/models/gencls.py` — Iq/Id sign convention fixed to standard
+  PSSE/Kundur (q-axis aligned with E', d-axis 90° behind).  All 8
+  Phase 1 tests still pass.
+- ⏳ `run_smib_genrou()` simulator helper with the 2×2 saliency-aware
+  algebraic network solve.
+- ⏳ `tests/test_genrou.py` 5-test battery.
+- ⏳ `notebooks/phase2_0_genrou.ipynb` colleague-facing artefact.
+- ⏳ `psse/phase2_0/` benchmark folder (parallel to `psse/phase1/`).
+- ⏳ Phase 1 notebook narrative refresh — the dq sign convention
+  changed under it, so §8.1 still reads "Iq surges" when it should
+  now read "Id surges" (physics unchanged, label only).
+
 ## What this is not
 
 - Not fast. State is held as named dicts for readability.
