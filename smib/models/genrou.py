@@ -181,9 +181,11 @@ class GENROU(Model):
         are absent because we don't model sub-transient dynamics here —
         see module docstring for what this approximation costs.
         """
-        # Sanity-check the reactance hierarchy at construction time.
-        assert 0 < Xdp < Xd, f"Bad d-axis order: X'={Xdp}, X={Xd}"
-        assert 0 < Xqp < Xq, f"Bad q-axis order: X'={Xqp}, X={Xq}"
+        # Sanity-check the reactance hierarchy.  Allow equality so the
+        # GENCLS-equivalence-limit case (X_d = X'_d, T'_d0 -> infty) is
+        # constructible for regression tests.
+        assert 0 < Xdp <= Xd, f"Bad d-axis order: X'={Xdp}, X={Xd}"
+        assert 0 < Xqp <= Xq, f"Bad q-axis order: X'={Xqp}, X={Xq}"
 
         Asat, Bsat = _sat_AB(S1, S2)
 

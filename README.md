@@ -15,8 +15,8 @@ GENROU model + foundations doc + PSSE Phase 1 benchmark complete.
 |---|---|---|
 | **0** — Skeleton | repo, solver, network, PF, scenarios, plotting, tests | ✅ done |
 | **1** — GENCLS | classical machine on SMIB, full notebook + PSSE benchmark | ✅ done |
-| **2.0** — GENROU bare | round-rotor 4-state two-axis transient model | 🔄 model done, simulator + notebook pending |
-| **2.1** — + ST1A AVR | static exciter, demonstrates LV reactive support boost | ⏳ pending |
+| **2.0** — GENROU bare | round-rotor 4-state two-axis transient model | ✅ done |
+| **2.1** — + ST1A AVR | static exciter, demonstrates LV reactive support boost | 🔄 starting |
 | **2.2** — + PSS1A | power system stabiliser, headline "with vs without PSS" plot | ⏳ pending |
 | **2.3** — + TGOV1 | turbine governor, primary frequency response | ⏳ pending |
 | **3** — IBR generic | REGC_A + REEC_A + REPC_A, weak-grid SCR sweep | ⏳ pending |
@@ -29,24 +29,56 @@ GENROU model + foundations doc + PSSE Phase 1 benchmark complete.
 notebook + PSSE benchmark folder all landed and pushed, with all 8
 pedagogy rules applied.
 
-**Phase 2.0 inner status** (since it's where we are):
+**Phase 2.0 — DONE**:
 
-- ✅ `smib/models/genrou.py` — 4-state two-axis transient model, init
-  passes self-consistency at machine epsilon, flat-line drift < 4e-14°
-  over 5 s.
-- ✅ `docs/genrou_physical_foundations.md` — full physical explanation
-  of every parameter with two SVG equivalent-circuit diagrams.
-- ✅ `smib/models/gencls.py` — Iq/Id sign convention fixed to standard
-  PSSE/Kundur (q-axis aligned with E', d-axis 90° behind).  All 8
-  Phase 1 tests still pass.
-- ⏳ `run_smib_genrou()` simulator helper with the 2×2 saliency-aware
-  algebraic network solve.
-- ⏳ `tests/test_genrou.py` 5-test battery.
-- ⏳ `notebooks/phase2_0_genrou.ipynb` colleague-facing artefact.
-- ⏳ `psse/phase2_0/` benchmark folder (parallel to `psse/phase1/`).
-- ⏳ Phase 1 notebook narrative refresh — the dq sign convention
-  changed under it, so §8.1 still reads "Iq surges" when it should
-  now read "Id surges" (physics unchanged, label only).
+- ✅ `smib/models/genrou.py` — 4-state two-axis transient model.
+- ✅ `docs/genrou_physical_foundations.md` + 2 SVG equivalent-circuit
+  diagrams.
+- ✅ `smib/models/gencls.py` — Iq/Id sign convention migrated to
+  standard PSSE/Kundur (8/8 Phase 1 tests still pass).
+- ✅ `run_smib_genrou()` simulator helper with 2×2 saliency-aware
+  algebraic network solve. Flat-line drift over 10 s < 5e-14°.
+- ✅ `tests/test_genrou.py` — 5/5 tests pass (flat-line, init
+  self-consistency, GENCLS-equivalence limit, small-signal natural
+  frequency, deep fault Q rises).
+- ✅ `notebooks/phase2_0_genrou.ipynb` — colleague-facing artefact
+  with GENROU vs GENCLS overlays. Headline: **GENROU deep-fault
+  CCT 240 ms vs GENCLS 293 ms** ($Z_f = j\,0.10$, the same fault as
+  §6) — the rotor-flux sag costs ~18 % of CCT, which is exactly what
+  the AVR in Phase 2.1 is for.
+- ✅ `psse/phase2_0/` — PSSE benchmark folder with full Kundur
+  Table 4.2 parameters in `smib_phase2_0.dyr`, psspy automation,
+  README documenting expected smib-vs-PSSE agreement (~3-5 % on
+  rotor and CCT, ~30 % discrepancy on first-50ms fault current
+  because smib lacks sub-transient).
+- ✅ Phase 1 notebook §9 reorganised — deep-fault CCT (293 ms) is now
+  the headline, bolted retained only as the analytic-EAC consistency
+  check (191 ms sim vs 187 ms analytic = 2.4 % match).
+
+**Phase 2.0 follow-ups deferred to later**:
+
+- ⏳ Phase 1 notebook §8.1 narrative refresh after the dq convention
+  migration ("Iq surges" → "Id surges"; physics unchanged, label
+  only).
+- ⏳ Phase 2.0b: full 6-state GENROU with sub-transient detail
+  (deferred — first-cycle fault current accuracy doesn't matter for
+  the AVR/PSS/Gov pedagogy in 2.1+).
+
+**Phase 2.1 — model + simulator landed, notebook + tests pending**:
+
+- ✅ `smib/models/st1a.py` — IEEE 421.5 ST1A static exciter, 2-state
+  simplified form (Vc voltage transducer + x_LL lead-lag internal).
+  Defaults: Tr=0.02 s, Ka=200, Tc=Tb=1, Vrmax=7, Vrmin=-6.4.
+- ✅ `run_smib_genrou_avr()` multi-model simulator in `simulator.py`.
+  Signal flow: `|V| → AVR → Efd → GENROU`. Combined 6-state vector
+  (4 GENROU + 2 ST1A). Flat-line drift 7e-16 over 10 s.
+- ✅ AVR-on smoke test result on the canonical fault: Efd ramps to
+  the ceiling (2.0 → 7.0), Eqp stays UP (0.924 → 0.940 vs GENROU-bare
+  0.909), terminal Q rises further (0.20 → 0.64 vs GENROU-bare 0.60).
+- ⏳ `tests/test_st1a.py` — flat-line, init self-consistency,
+  voltage-step response, AVR-on vs AVR-off CCT comparison.
+- ⏳ `notebooks/phase2_1_avr.ipynb` — same fault as Phase 2.0, with
+  AVR-on overlay showing Efd ramp, Eqp held up, Q boost.
 
 ## What this is not
 

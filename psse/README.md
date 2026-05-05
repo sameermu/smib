@@ -7,8 +7,11 @@ against the industry reference.
 ## Layout
 
 - `phase1/` — GENCLS, deep inductive fault.  See `phase1/README.md`.
-- `phase2/` — GENROU + ST1A + PSS1A + TGOV1.  Built incrementally as
-  Phase 2 lands; see `phase2/README.md` once it exists.
+- `phase2_0/` — GENROU bare (no AVR/PSS/Gov), same fault scenario
+  as Phase 1.  See `phase2_0/README.md`.
+- `phase2_1/` — GENROU + ST1A AVR (coming once Phase 2.1 lands).
+- `phase2_2/` — GENROU + ST1A + PSS1A (coming once Phase 2.2 lands).
+- `phase2_3/` — GENROU + ST1A + PSS1A + TGOV1 (coming once Phase 2.3 lands).
 
 ## What to compare
 

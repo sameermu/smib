@@ -4,7 +4,8 @@
 # What it does:
 #   1. cd into the smib repo (wherever this file lives)
 #   2. Activate the .venv created by setup.sh
-#   3. Launch Jupyter on the Phase 1 notebook (will open your browser)
+#   3. Launch Jupyter, landing on the notebooks/ file browser so you
+#      can pick any phase notebook.
 #
 # Press Ctrl+C twice in this Terminal window to stop Jupyter when done.
 
@@ -21,7 +22,6 @@ fi
 # shellcheck disable=SC1091
 source .venv/bin/activate
 
-# Launch on the Phase 1 notebook by default. Edit this line if you
-# want to land on a different notebook in the future, or remove the
-# trailing path to land on the file browser.
-jupyter notebook notebooks/phase1_gencls.ipynb
+# Land on the notebooks/ file browser so the user can choose between
+# phase1_gencls.ipynb, phase2_0_genrou.ipynb, etc.
+jupyter notebook --notebook-dir=notebooks

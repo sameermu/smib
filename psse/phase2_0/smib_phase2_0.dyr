@@ -1,0 +1,23 @@
+/
+/  smib Phase 2.0 — GENROU dynamics file (Kundur Table 4.2 round-rotor)
+/  Bus 101 (gen), machine ID '1 '.
+/
+/  PSSE GENROU parameter order (one machine per line):
+/
+/  BUS 'GENROU' ID  T'do  T"do  T'qo  T"qo  H  D  Xd  Xq  X'd  X'q  X"d  Xl  S(1.0)  S(1.2)  /
+/
+/  Where:
+/    T'do  - d-axis transient open-circuit time constant [s]
+/    T"do  - d-axis subtransient open-circuit time constant [s]
+/    T'qo  - q-axis transient open-circuit time constant [s]
+/    T"qo  - q-axis subtransient open-circuit time constant [s]
+/    H     - inertia constant on machine MVA base [s]
+/    D     - mechanical damping coefficient
+/    Xd, Xq, X'd, X'q  - synchronous and transient reactances [pu]
+/    X"d   - subtransient reactance (PSSE GENROU assumes X"d = X"q for round rotor)
+/    Xl    - stator leakage reactance [pu]
+/    S(1.0), S(1.2)  - quadratic saturation coefficients at 1.0 and 1.2 pu air-gap flux
+/
+/  All reactances and time constants are on the machine's MVA base.
+/
+   101 'GENROU' 1   8.0  0.03  1.0  0.07  4.0  0.0  1.81  1.76  0.30  0.65  0.23  0.16  0.13  0.50  /
