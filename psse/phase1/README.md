@@ -27,13 +27,16 @@ The Phase 1 notebook simulates this scenario:
 | V1 from PF (angle)                    | +23.142 deg    |
 | Initial rotor angle delta_0           | +35.495 deg    |
 | Internal EMF \|E'\| (held constant)   | 1.1023 pu      |
-| Mid-fault \|V\| (t = 1.05 s)          | 0.348 pu       |
-| Mid-fault P                           | +0.291 pu      |
-| Mid-fault Q                           | +0.848 pu      |
-| Peak rotor swing (post-fault)         | ~42 deg @ 4.3 s|
-| Bolted-fault CCT (smib bisection)     | 191 ms         |
-| Bolted-fault CCT (analytic EAC)       | 187 ms (2.3% off) |
-| Deep inductive CCT (Z_f = j*0.10)     | 293 ms         |
+| Mid-fault \|V\| (t = 1.05 s)          | 0.353 pu       |
+| Mid-fault P                           | +0.289 pu      |
+| Mid-fault Q                           | +0.849 pu      |
+| Peak rotor swing (post-fault, decays) | visibly damped |
+| Bolted-fault CCT (smib bisection)     | 219 ms         |
+| Bolted-fault CCT (analytic EAC)       | 204 ms (7.1% off) |
+| Deep inductive CCT (Z_f = j*0.10)     | 339 ms         |
+
+All numbers use load damping D = 3 (PSSE GENCLS dynamics file
+should match — set D = 3 in `smib_phase1.dyr`).
 
 PSSE results within ~3 % of these numbers should be considered a clean
 match — the only expected differences are integrator step size and
@@ -42,7 +45,7 @@ exactly how the shunt fault is applied.
 ## Files
 
 - `smib_phase1.dyr` — GENCLS dynamics model, Bus 101, machine ID '1 '.
-  Parameters: H = 4.0 s, D = 0, X'd = 0.30 pu.
+  Parameters: H = 4.0 s, D = 3.0, X'd = 0.30 pu.
 - `run_phase1_fault.py` — psspy automation script that loads the case,
   applies the fault, runs the simulation, and writes a channel file
   with delta, omega, P, Q, V, Efd traces for comparison.

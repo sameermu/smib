@@ -20,4 +20,4 @@
 /
 /  All reactances and time constants are on the machine's MVA base.
 /
-   101 'GENROU' 1   8.0  0.03  1.0  0.07  4.0  0.0  1.81  1.76  0.30  0.65  0.23  0.16  0.13  0.50  /
+   101 'GENROU' 1   8.0  0.03  1.0  0.07  4.0  3.0  1.81  1.76  0.30  0.65  0.23  0.16  0.13  0.50  /

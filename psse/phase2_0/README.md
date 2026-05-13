@@ -24,7 +24,7 @@ see `smib_phase2_0.dyr` for the exact values:
 | Parameter | Value | Meaning |
 |---|---|---|
 | H        | 4.0 s   | inertia |
-| D        | 0       | mechanical damping |
+| D        | 3.0     | load damping (notebook scenario default) |
 | Xd       | 1.81 pu | d-axis synchronous reactance |
 | Xq       | 1.76 pu | q-axis synchronous reactance |
 | X'd      | 0.30 pu | d-axis transient reactance |
@@ -52,8 +52,10 @@ see `smib_phase2_0.dyr` for the exact values:
 | Mid-fault Q                    | +0.602 pu                  | less than GENCLS (0.847) — Eqp sag |
 | Mid-fault Eqp                  | 0.9088 pu                  | sagged 0.015 from initial |
 | Peak rotor angle               | ~73° around t = 1.3 s post-fault |  |
-| **Deep-fault CCT (j*0.10)**    | **240 ms**                 | vs GENCLS 293 ms — Eqp sag costs 53 ms |
-| Bolted-fault CCT (j*0.001)     | 153 ms                     | vs GENCLS 191 ms — Eqp sag costs 38 ms |
+| **Deep-fault CCT (j*0.10)**    | **275 ms**                 | vs GENCLS 339 ms — Eqp sag costs 64 ms |
+| Bolted-fault CCT (j*0.001)     | 175 ms                     | vs GENCLS 219 ms — Eqp sag costs 44 ms |
+
+(All CCT numbers use load damping D = 3.)
 
 ## The 4-state vs full GENROU caveat
 
@@ -125,8 +127,8 @@ writes `smib_phase2_0_fault.out`.
 
 ## CCT comparison protocol
 
-To bisect on CCT in PSSE matching the smib §9 result of 240 ms for
-the deep inductive fault:
+To bisect on CCT in PSSE matching the smib §9 result of 275 ms for
+the deep inductive fault (with D = 3):
 
 1. Run the script repeatedly with different fault durations.
 2. Stability proxy: rotor stays within ±360° of starting angle.

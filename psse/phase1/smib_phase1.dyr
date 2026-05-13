@@ -8,4 +8,4 @@
 /  Format (one line per machine, comma-separated):
 /    BUS  'GENCLS'  ID  H  D  X'd
 /
-   101 'GENCLS' 1   4.0  0.0  0.30   /
+   101 'GENCLS' 1   4.0  3.0  0.30   /

@@ -65,18 +65,19 @@ AVR parameters (smib defaults, see `smib_phase2_1.dyr`):
 | Peak Efd during fault  | 7.0 pu         | hits Vrmax ceiling |
 | Vc nadir during fault  | 0.29 pu        | sensed terminal voltage |
 | E'q nadir during fault | 0.92 pu        | nearly no sag — AVR cancels it |
-| Peak rotor angle       | 119.8°         | vs 114.2° AVR-off (see below) |
-| **Deep-fault CCT**     | **290 ms**     | vs 240 ms AVR-off |
-| AVR lift over bare GENROU | **+28 ms (+10.7%)** | the headline number |
+| Peak rotor angle (AVR on)  | 102.8°     | vs 111.2° AVR-off |
+| **Deep-fault CCT**     | **327 ms**     | vs 275 ms AVR-off |
+| AVR lift over bare GENROU | **+52 ms (+19 %)** | the headline number |
 
-**Note on the rotor-angle peak**: with AVR on, the rotor peak at the
-*sub-critical* 200 ms clearing time is actually *larger* than AVR-off
-(119.8° vs 114.2°).  This is not a bug.  The AVR preserves `E'q`
-through the fault, which means more synchronising power is available
-post-fault and the new equilibrium angle is slightly farther out, so
-the rotor overshoots farther on its way there.  The payoff is in
-the **CCT** number: the AVR-on case stays *stable* at clearing
-times where the AVR-off case loses synchronism.
+(All numbers use load damping D = 3.)
+
+**Note on the rotor-angle peak**: with load damping D = 3, the AVR-on
+rotor peak (102.8°) at the 200 ms clearing time is smaller than the
+AVR-off peak (111.2°) — the AVR helps even sub-critically.  At
+D = 0 (no load damping) the ordering inverts: AVR-on overshoots
+farther on its way to a new equilibrium because more synchronising
+power is available post-fault.  Either way the CCT-lift number is
+the headline.
 
 ## CCT comparison protocol across three machine models
 
@@ -84,9 +85,9 @@ This is the headline summary table from Phase 2.1 §8:
 
 | Model | CCT (ms) | Notes |
 |---|---|---|
-| GENCLS (Phase 1)              | 293 ms | overestimate — no E'q sag |
-| GENROU bare (Phase 2.0)       | 240 ms | most conservative — full sag |
-| GENROU + ST1A AVR (Phase 2.1) | 290 ms | AVR force-fields rotor flux |
+| GENCLS (Phase 1)              | 339 ms | overestimate — no E'q sag |
+| GENROU bare (Phase 2.0)       | 275 ms | most conservative — full sag |
+| GENROU + ST1A AVR (Phase 2.1) | 327 ms | AVR force-fields rotor flux |
 
 GENCLS and GENROU+AVR happen to agree closely on CCT for this case,
 but for very different reasons: GENCLS doesn't model the sag at all
@@ -163,7 +164,8 @@ inductive fault, and writes `smib_phase2_1_fault.out`.
 
 ## CCT comparison protocol
 
-To bisect on CCT in PSSE matching the smib §8 result of 290 ms:
+To bisect on CCT in PSSE matching the smib §8 result of 327 ms
+(with D = 3):
 
 1. Run the script repeatedly with different fault durations.
 2. Stability proxy: rotor stays within ±360° of starting angle.

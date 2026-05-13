@@ -44,17 +44,18 @@ pedagogy rules applied.
   frequency, deep fault Q rises).
 - ✅ `notebooks/phase2_0_genrou.ipynb` — colleague-facing artefact
   with GENROU vs GENCLS overlays. Headline: **GENROU deep-fault
-  CCT 240 ms vs GENCLS 293 ms** ($Z_f = j\,0.10$, the same fault as
-  §6) — the rotor-flux sag costs ~18 % of CCT, which is exactly what
-  the AVR in Phase 2.1 is for.
+  CCT 275 ms vs GENCLS 339 ms** ($Z_f = j\,0.10$, the same fault as
+  §6, with realistic load damping D = 3) — the rotor-flux sag costs
+  ~19 % of CCT, which is exactly what the AVR in Phase 2.1 is for.
 - ✅ `psse/phase2_0/` — PSSE benchmark folder with full Kundur
   Table 4.2 parameters in `smib_phase2_0.dyr`, psspy automation,
   README documenting expected smib-vs-PSSE agreement (~3-5 % on
   rotor and CCT, ~30 % discrepancy on first-50ms fault current
   because smib lacks sub-transient).
-- ✅ Phase 1 notebook §9 reorganised — deep-fault CCT (293 ms) is now
-  the headline, bolted retained only as the analytic-EAC consistency
-  check (191 ms sim vs 187 ms analytic = 2.4 % match).
+- ✅ Phase 1 notebook §9 reorganised — deep-fault CCT (339 ms at
+  D = 3 load damping) is now the headline, bolted retained only as
+  the analytic-EAC consistency check (219 ms sim vs 204 ms analytic
+  = 7.1 % match).
 
 **Phase 2.0 follow-ups deferred to later**:
 
@@ -84,11 +85,11 @@ pedagogy rules applied.
 - ✅ `psse/phase2_1/` — PSSE benchmark folder with both GENROU and
   ST1A in `smib_phase2_1.dyr` (Kundur Table 4.2 + smib AVR
   defaults), psspy automation, full reference-numbers table.
-- ✅ **Headline result**: **AVR lifts CCT from 240 ms (bare GENROU)
-  to 290 ms (+28 ms, +10.7%)** on the deep inductive fault.
-  Closes most of the gap to the GENCLS reference (293 ms) — for
-  different physics: GENCLS ignores the sag entirely, AVR cancels
-  the sag via field forcing.
+- ✅ **Headline result**: **AVR lifts CCT from 275 ms (bare GENROU)
+  to 327 ms (+52 ms, +19 %)** on the deep inductive fault at D = 3
+  load damping.  Closes most of the gap to the GENCLS reference
+  (339 ms) — for different physics: GENCLS ignores the sag entirely,
+  AVR cancels the sag via field forcing.
 
 ## Confirming the smib black-box
 
