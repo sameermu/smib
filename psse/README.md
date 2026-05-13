@@ -44,3 +44,21 @@ Two distinct goals:
    side trust PSSE.  Showing that smib reproduces PSSE on a curated
    case lets them trust smib too — and then use smib as a
    transparent way to *understand* what PSSE is doing under the hood.
+
+## Planned companion — Dynawo (Phase 3 onward)
+
+Once Phase 3 (IBR — REGC_A + REEC_A + REPC_A) lands we will add a
+sibling `dynawo/` folder at the same level as `psse/`, using the
+same per-phase template (one input deck, one run script, one README
+with the smib reference numbers).  Dynawo (RTE + AIA) is built on
+Modelica so its IBR libraries are *readable* — making it the
+natural open-source complement to PSSE for inverter studies where
+PSSE alone is unsatisfying.  Concrete role: independent
+tie-breaker, read-the-equations sanity check on IBR limit logic,
+and a credible reference for colleagues without a PSSE license.
+
+We are *not* setting Dynawo up retroactively for Phase 1/2.  For
+classical machines, smib + PSSE is the correctness floor that pays
+the rent.  Phase 3 is where the second open-source leg earns its
+keep.  See the "External-tool benchmarks" section of the top-level
+`README.md` for the broader strategy.

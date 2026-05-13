@@ -352,6 +352,50 @@ TGOV1, IBR, GFM, SVC/STATCOM/SynCon, scenario browser, small-signal.
 Bake them in from the start of each new notebook rather than retrofit
 them after review.
 
+## External-tool benchmarks — current and planned
+
+The benchmark strategy is "one industry reference, one open-source
+equation-based reference, plus smib". Today only the industry leg
+exists.
+
+- **PSSE (industry reference)** — `psse/phase1/`, `psse/phase2_0/`,
+  one folder per phase going forward. Trusted by power-systems
+  colleagues; opaque under the hood. Already wired in (see rule 8
+  above).
+- **Dynawo (open-source equation-based reference, planned Phase 3+)**
+  — sibling `dynawo/phase3/` folder, same template as `psse/phaseN/`:
+  one input deck per phase (`.iidm`/`.par`/`.dyd`), one run script,
+  one README with the smib reference numbers. Dynawo (RTE + AIA) is
+  built on Modelica, so its model libraries are *readable*; that
+  makes it the natural complement to PSSE for Phase 3 onward, when
+  inverter-based-resource models (REGC_A, REEC_A, REPC_A, REGFM_A1)
+  start mattering and PSSE alone stops being a satisfying answer.
+  Three concrete uses: (i) independent tie-breaker if smib and PSSE
+  disagree on an IBR case — three open eyes localise the bug faster
+  than two; (ii) read-the-equations cross-check on IBR limit logic,
+  which PSSE hides; (iii) credibility lever for colleagues who don't
+  have a PSSE license.
+
+We are *not* adding Dynawo as a hard dependency or pulling it into
+Phase 1/2.  For classical machines the smib + PSSE pair is the
+right correctness floor.  Phase 3 (IBR) is where Dynawo earns its
+keep.
+
+For a one-time sanity exercise on the Phase 2 stack, the OpenIPSL
+Modelica library has GENROU/ST1A/PSS1A/TGOV1 in pure equation form;
+cross-reading their `.mo` files against `smib/models/*.py` is a
+useful complement to `docs/genrou_physical_foundations.md`.  This
+is a *reading* exercise, not a runtime dependency.
+
+We are leaving **VeraGrid** (née GridCal) out of the benchmark
+stack.  VeraGrid is excellent for bulk-system planning workflows
+(power flow, OPF, contingency, time-series), but its transient
+stability solver is less mature than PSSE/Dynawo and its DAE isn't
+exposed the way Modelica's is — so it adds neither correctness floor
+nor pedagogical transparency beyond what smib + PSSE + Dynawo will
+give.  Revisit only if smib outgrows SMIB into multi-bus territory
+(Phase 5+).
+
 ## PLL design (Phase 3 onward)
 
 The PLL is the first control block that has to be right before any
