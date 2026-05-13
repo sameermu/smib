@@ -371,15 +371,23 @@ def run_smib_genrou_avr(genrou: "GENROU", avr, network: Network,
     t = np.linspace(0.0, t_end, n_steps + 1)
 
     # Pre-allocate trace arrays — combine outputs from both models.
+    #
+    # Key-collision policy: when both models report the same key (notably
+    # "Efd"), GENROU's value is the *commanded* field voltage that fed
+    # into its derivatives this step, and the AVR's value is the *output*
+    # of the regulator.  At every steady state and every converged step
+    # they agree.  We keep one canonical "Efd" trace driven by the AVR
+    # (the live regulator output) and stash GENROU's view under
+    # "genrou_Efd" for diagnostic plotting.
     out0_g = genrou.algebraic_output()
     out0_a = avr.algebraic_output()
     traces = {}
     for k, v in out0_g.items():
-        traces[k] = np.zeros(n_steps + 1); traces[k][0] = v
-    for k, v in out0_a.items():
-        # Prefix avr keys to avoid collision (shouldn't happen but safe).
-        new_k = f"avr_{k}" if k in traces else k
+        new_k = f"genrou_{k}" if k in out0_a else k
         traces[new_k] = np.zeros(n_steps + 1); traces[new_k][0] = v
+    for k, v in out0_a.items():
+        # AVR keys take precedence on collision.
+        traces[k] = np.zeros(n_steps + 1); traces[k][0] = v
     iters_log = np.zeros(n_steps + 1, dtype=int)
 
     x = get_x()
@@ -401,13 +409,10 @@ def run_smib_genrou_avr(genrou: "GENROU", avr, network: Network,
         out_g = genrou.algebraic_output()
         out_a = avr.algebraic_output()
         for kk, vv in out_g.items():
-            traces[kk][k] = vv
+            target = f"genrou_{kk}" if kk in out_a else kk
+            traces[target][k] = vv
         for kk, vv in out_a.items():
-            new_k = f"avr_{kk}" if kk == "error" or kk == "Vref" or kk == "Vc" or kk == "Efd" else kk
-            # Actually we want to keep Efd, error, Vc, Vref but they may
-            # collide with model outputs.  GENROU has Efd in its params but
-            # also reports it.  Take AVR's version (it's the live one).
-            traces[kk if kk not in {"Efd"} else "Efd"][k] = vv
+            traces[kk][k] = vv
 
     return SimResult(
         t=t,

@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img"
+     style="font-family:system-ui,-apple-system,sans-serif">
+  <title>ST1A — IEEE 421.5 static exciter block diagram</title>
+  <desc>Signal flow: sensed terminal voltage Vc passes through a first-order lag, is summed with Vref and Vpss to form the regulator error, the error feeds a lead-lag and a high gain Ka, and the output is clamped to Vrmax/Vrmin to produce Efd.</desc>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="360" fill="#FAFAFA"/>
+
+  <text x="480" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#1A1A1A">
+    ST1A — IEEE 421.5 static exciter (simplified, no OEL / UEL / rate feedback)
+  </text>
+  <text x="480" y="48" text-anchor="middle" font-size="12" fill="#555">
+    Two states: Vc (sensed voltage) and x_LL (lead-lag internal).  At steady state error = Efd / Ka.
+  </text>
+
+  <!-- |V_t| input -->
+  <text x="55" y="170" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A1A">|V_t|</text>
+  <line x1="80" y1="165" x2="140" y2="165" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Transducer -->
+  <rect x="140" y="135" width="140" height="60" rx="6" fill="#E1F5FE" stroke="#0277BD" stroke-width="2"/>
+  <text x="210" y="165" text-anchor="middle" font-size="13" font-weight="700" fill="#01579B">
+    1 / (1 + s T_r)
+  </text>
+  <text x="210" y="185" text-anchor="middle" font-size="11" fill="#0277BD">
+    transducer (state Vc)
+  </text>
+
+  <!-- Vc to summer -->
+  <line x1="280" y1="165" x2="340" y2="165" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="310" y="158" text-anchor="middle" font-size="11" fill="#555">Vc</text>
+
+  <!-- Summer -->
+  <circle cx="360" cy="165" r="20" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+  <text x="360" y="160" text-anchor="middle" font-size="13" font-weight="700">Σ</text>
+  <text x="378" y="158" font-size="11" fill="#666">−</text>
+  <text x="345" y="148" font-size="11" fill="#666">+</text>
+  <text x="375" y="190" font-size="11" fill="#666">+</text>
+
+  <!-- Vref input -->
+  <text x="360" y="100" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A1A">V_ref</text>
+  <line x1="360" y1="105" x2="360" y2="145" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Vpss input -->
+  <text x="360" y="240" text-anchor="middle" font-size="13" font-weight="600" fill="#1A1A1A">V_pss</text>
+  <text x="360" y="256" text-anchor="middle" font-size="10" fill="#888">(0 in Phase 2.1)</text>
+  <line x1="360" y1="225" x2="360" y2="185" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- error to lead-lag -->
+  <line x1="380" y1="165" x2="440" y2="165" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="410" y="158" text-anchor="middle" font-size="11" fill="#555">error</text>
+
+  <!-- Lead-lag + gain -->
+  <rect x="440" y="135" width="160" height="60" rx="6" fill="#FFF3E0" stroke="#E65100" stroke-width="2"/>
+  <text x="520" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#BF360C">
+    K_a · (1 + s T_c)
+  </text>
+  <line x1="490" y1="170" x2="550" y2="170" stroke="#BF360C" stroke-width="1.5"/>
+  <text x="520" y="185" text-anchor="middle" font-size="13" font-weight="700" fill="#BF360C">
+    (1 + s T_b)
+  </text>
+  <text x="520" y="125" text-anchor="middle" font-size="10" fill="#666">
+    regulator (state x_LL)
+  </text>
+
+  <!-- E_fd unlimited to limiter -->
+  <line x1="600" y1="165" x2="660" y2="165" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="630" y="158" text-anchor="middle" font-size="11" fill="#555">unlimited</text>
+
+  <!-- Limiter -->
+  <rect x="660" y="135" width="140" height="60" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2"/>
+  <text x="730" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#1B5E20">
+    clamp [V_rmin,
+  </text>
+  <text x="730" y="180" text-anchor="middle" font-size="13" font-weight="700" fill="#1B5E20">
+    V_rmax]
+  </text>
+
+  <!-- Efd output to GENROU -->
+  <line x1="800" y1="165" x2="900" y2="165" stroke="#333" stroke-width="2.5" marker-end="url(#arr)"/>
+  <text x="850" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#1A1A1A">E_fd</text>
+  <text x="850" y="180" text-anchor="middle" font-size="10" fill="#666">→ GENROU</text>
+
+  <!-- Bottom annotation: closure path -->
+  <rect x="120" y="280" width="720" height="60" rx="6" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="480" y="302" text-anchor="middle" font-size="11" font-weight="600" fill="#555">
+    Loop closure (algebraic, every timestep):
+  </text>
+  <text x="480" y="322" text-anchor="middle" font-size="11" fill="#555">
+    GENROU produces I_inject(δ, E'q, E'd, V_t) → network solve gives V_t → |V_t| feeds back into transducer.  The corrector loop
+  </text>
+  <text x="480" y="336" text-anchor="middle" font-size="11" fill="#555">
+    ticks up from 2–3 (bare GENROU) to 3–5 iterations because E_fd now depends algebraically on V_t.
+  </text>
+</svg>

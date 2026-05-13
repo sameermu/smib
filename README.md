@@ -8,15 +8,16 @@ an industry simulator on a curated case?"
 
 ## Project status
 
-Update this section as phases land.  Last update: Phase 2.0 in flight,
-GENROU model + foundations doc + PSSE Phase 1 benchmark complete.
+Update this section as phases land.  Last update: Phase 2.1 shipped
+(GENROU + ST1A AVR — model, tests, notebook, PSSE benchmark all
+landed).
 
 | Phase | Scope | Status |
 |---|---|---|
 | **0** — Skeleton | repo, solver, network, PF, scenarios, plotting, tests | ✅ done |
 | **1** — GENCLS | classical machine on SMIB, full notebook + PSSE benchmark | ✅ done |
 | **2.0** — GENROU bare | round-rotor 4-state two-axis transient model | ✅ done |
-| **2.1** — + ST1A AVR | static exciter, demonstrates LV reactive support boost | 🔄 starting |
+| **2.1** — + ST1A AVR | static exciter, voltage-step + CCT-lift headlines | ✅ done |
 | **2.2** — + PSS1A | power system stabiliser, headline "with vs without PSS" plot | ⏳ pending |
 | **2.3** — + TGOV1 | turbine governor, primary frequency response | ⏳ pending |
 | **3** — IBR generic | REGC_A + REEC_A + REPC_A, weak-grid SCR sweep | ⏳ pending |
@@ -64,21 +65,30 @@ pedagogy rules applied.
   (deferred — first-cycle fault current accuracy doesn't matter for
   the AVR/PSS/Gov pedagogy in 2.1+).
 
-**Phase 2.1 — model + simulator landed, notebook + tests pending**:
+**Phase 2.1 — DONE**:
 
 - ✅ `smib/models/st1a.py` — IEEE 421.5 ST1A static exciter, 2-state
   simplified form (Vc voltage transducer + x_LL lead-lag internal).
   Defaults: Tr=0.02 s, Ka=200, Tc=Tb=1, Vrmax=7, Vrmin=-6.4.
 - ✅ `run_smib_genrou_avr()` multi-model simulator in `simulator.py`.
   Signal flow: `|V| → AVR → Efd → GENROU`. Combined 6-state vector
-  (4 GENROU + 2 ST1A). Flat-line drift 7e-16 over 10 s.
-- ✅ AVR-on smoke test result on the canonical fault: Efd ramps to
-  the ceiling (2.0 → 7.0), Eqp stays UP (0.924 → 0.940 vs GENROU-bare
-  0.909), terminal Q rises further (0.20 → 0.64 vs GENROU-bare 0.60).
-- ⏳ `tests/test_st1a.py` — flat-line, init self-consistency,
-  voltage-step response, AVR-on vs AVR-off CCT comparison.
-- ⏳ `notebooks/phase2_1_avr.ipynb` — same fault as Phase 2.0, with
-  AVR-on overlay showing Efd ramp, Eqp held up, Q boost.
+  (4 GENROU + 2 ST1A). Flat-line drift at machine epsilon.
+- ✅ `tests/test_st1a.py` — 5/5 tests pass (flat-line, init
+  self-consistency, AVR-locked → bare GENROU equivalence,
+  voltage-step direction + magnitude, CCT lift over bare GENROU).
+- ✅ `notebooks/phase2_1_avr.ipynb` — colleague-facing artefact
+  with two headline plots: voltage-step response (+2 % Vref bump,
+  dominant time constant = T'do = 8 s) and deep-fault AVR-on vs
+  AVR-off overlay (Efd hits Vrmax = 7 pu, E'q held up at 0.92
+  instead of sagging to 0.81).
+- ✅ `psse/phase2_1/` — PSSE benchmark folder with both GENROU and
+  ST1A in `smib_phase2_1.dyr` (Kundur Table 4.2 + smib AVR
+  defaults), psspy automation, full reference-numbers table.
+- ✅ **Headline result**: **AVR lifts CCT from 240 ms (bare GENROU)
+  to 290 ms (+28 ms, +10.7%)** on the deep inductive fault.
+  Closes most of the gap to the GENCLS reference (293 ms) — for
+  different physics: GENCLS ignores the sag entirely, AVR cancels
+  the sag via field forcing.
 
 ## Confirming the smib black-box
 
