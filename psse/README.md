@@ -29,7 +29,7 @@ canonical traces, given:
 
 - Both use the implicit trapezoidal integrator.
 - Both use the same swing equation / model-equation set.
-- Smib runs at h = 2 ms; PSSE defaults to ~4.17 ms (1/4 cycle).  Set
+- Smib runs at h = 2 ms; PSSE defaults to ~5 ms (1/4 cycle).  Set
   PSSE's `DELT = 0.002` to match.
 
 ## Why we benchmark

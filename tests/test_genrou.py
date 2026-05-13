@@ -77,17 +77,17 @@ def test_genrou_reduces_to_gencls_in_limit():
 
     # GENROU set up to mimic GENCLS: no rotor flux dynamics.
     g_genrou = GENROU(
-        H=4.0, D=0.0, f0=60.0,
+        H=4.0, D=0.0, f0=50.0,
         Xd=0.30, Xdp=0.30, Tdo_p=1e9,           # X_d = X'_d, T'_d0 -> infty
         Xq=0.30, Xqp=0.30, Tqo_p=1e9,           # symmetric q-axis
         S1=0.0, S2=0.0,                          # no saturation
     )
     n_genrou = Network(R=0.0, X=0.5, V_slack_mag=1.0)
-    g_gencls = GENCLS(H=4.0, D=0.0, Xdp=0.30, f0=60.0)
+    g_gencls = GENCLS(H=4.0, D=0.0, Xdp=0.30, f0=50.0)
     n_gencls = Network(R=0.0, X=0.5, V_slack_mag=1.0)
 
     def is_stable_genrou(t_clear):
-        g = GENROU(H=4.0, D=0.0, f0=60.0,
+        g = GENROU(H=4.0, D=0.0, f0=50.0,
                    Xd=0.30, Xdp=0.30, Tdo_p=1e9,
                    Xq=0.30, Xqp=0.30, Tqo_p=1e9,
                    S1=0.0, S2=0.0)
@@ -99,7 +99,7 @@ def test_genrou_reduces_to_gencls_in_limit():
         return abs(r.traces["delta"] - delta0).max() < 2 * math.pi
 
     def is_stable_gencls(t_clear):
-        g = GENCLS(H=4.0, D=0.0, Xdp=0.30, f0=60.0)
+        g = GENCLS(H=4.0, D=0.0, Xdp=0.30, f0=50.0)
         n = Network(R=0.0, X=0.5, V_slack_mag=1.0)
         f = three_phase_fault_schedule(1.0, 1.0 + t_clear, 0.001 + 0j)
         r = run_smib_gencls(g, n, t_end=5.0, h=2e-3, scenarios=[f],
@@ -157,7 +157,7 @@ def test_genrou_small_signal_natural_frequency():
     # Here X_total = X_d + X_line for the synchronous regime, but for
     # the swing-frequency timescale of a few hundred ms it's dominated
     # by X'_d.  We accept either as the analytic reference within ±15 %.
-    omega0 = 2 * math.pi * 60
+    omega0 = 2 * math.pi * 50
     delta_0 = math.atan2(*np.array([
         (V1 + 1j * 1.81 * np.conj(S / V1)).imag,
         (V1 + 1j * 1.81 * np.conj(S / V1)).real,

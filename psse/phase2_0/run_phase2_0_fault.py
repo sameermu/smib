@@ -127,7 +127,7 @@ def main():
 def build_case():
     """Same 2-bus case as Phase 1, just with a GENROU machine instead
     of GENCLS.  The PF output is identical (same network, same loading)."""
-    psspy.base_frequency(60.0)
+    psspy.base_frequency(50.0)
 
     psspy.bus_data_4([101, 1, 0, 0, 0], [0.0, 18.0, 1.0, 0.0, 1.1, 0.9, 1.1, 0.9], "GEN BUS")
     psspy.bus_data_4([102, 1, 0, 0, 0], [0.0, 18.0, 1.0, 0.0, 1.1, 0.9, 1.1, 0.9], "INF BUS")

@@ -80,6 +80,53 @@ pedagogy rules applied.
 - ⏳ `notebooks/phase2_1_avr.ipynb` — same fault as Phase 2.0, with
   AVR-on overlay showing Efd ramp, Eqp held up, Q boost.
 
+## Confirming the smib black-box
+
+Sameer asked: what's in the smib black-box?  Here it is, definitively.
+For the full version with diagrams and equations see
+[`docs/network_machine_interface.md`](docs/network_machine_interface.md).
+
+**What smib *does* simulate** (Phase 2.0 baseline):
+
+- Stationary system DQ frame for the network (RMS phasors at 50 Hz
+  synchronous reference).
+- Rotating machine dq frame per synchronous generator, at rotor
+  angle $\delta$ from the system reference.
+- The rotation $X_{\text{machine}} = X_{\text{global}}\cdot e^{-j\delta}$
+  between them, applied each integrator timestep.
+- Park's transformation from time-domain abc to dq is **implicit** —
+  we never deal with abc signals.  Phasors are RMS, in the
+  synchronous reference, from the start.
+- Implicit trapezoidal integrator with fixed-point corrector for the
+  differential states (machine flux, rotor swing).
+- Algebraic network solve $V = Y_\text{bus}^{-1}\cdot I_\text{inject}$
+  in closed form per step, with the machine's Norton equivalent
+  folded into the bus diagonal so no inner iteration is needed for
+  linear machines.
+
+**What smib *approximates* vs full PSSE / PowerWorld GENROU**:
+
+- Sub-transient detail dropped — no $\psi''_d$, $\psi''_q$, $X''_d$,
+  $X''_q$, $T''_{d0}$, $T''_{q0}$, or stator leakage $X_l$ in the
+  4-state model.  Costs ~30 % on first-50ms fault current spike;
+  matches PSSE within 3-5 % on rotor angle, oscillation period, and
+  CCT beyond 50 ms.
+- Saturation acts on $|E'_q|$ alone; full GENROU saturates the
+  full air-gap flux $\sqrt{\psi_d^2 + \psi_q^2}$.
+- Speed-voltage coupling $V = j(1+\bar\omega)\psi$ uses
+  $\bar\omega = 0$ — small-slip approximation valid for $|\bar\omega|
+  < 0.05$ pu.
+
+**What smib *does not yet* simulate** (Phase 2.1+):
+
+- Multi-machine networks (the partitioned structure handles them
+  trivially; we just haven't written the code because SMIB is
+  single-machine).
+- Hard limits with anti-windup that break linearity in the network
+  loop (AVR ceiling on long faults, IBR current limiting).  Will
+  need an inner Newton or fixed-point iteration when added.
+- IBR models entirely (Phase 3 onward).
+
 ## What this is not
 
 - Not fast. State is held as named dicts for readability.
@@ -105,6 +152,30 @@ The frontend is a Jupyter notebook per phase, with embedded `ipywidgets`
 sliders driving live Plotly plots via `smib.plotting.scenario_slider`.
 No web server, no separate UI process — the notebook *is* the
 dashboard. See `notebooks/phase1_gencls.ipynb` for the pattern.
+
+## Foundations docs (read these first)
+
+The smib project is structured "physics → math → solver → code".
+Two foundation documents in `docs/` carry the conceptual content
+that the model-by-model docstrings can't:
+
+- **[`docs/genrou_physical_foundations.md`](docs/genrou_physical_foundations.md)**
+  — what each synchronous-machine parameter physically represents
+  ($X_d$/$X'_d$/$X''_d$ hierarchy, $T'_{d0}$/$T''_{d0}$ as L/R of the
+  rotor windings, leakage $X_l$, saturation), the d-axis Park
+  equivalent circuit, the three reactance regimes over time. Read
+  before Phase 2.0 / GENROU material.
+
+- **[`docs/network_machine_interface.md`](docs/network_machine_interface.md)**
+  — how RMS/phasor simulators stitch per-machine differential
+  equations (in each rotor's rotating dq frame) to the algebraic
+  network solve (in the stationary system DQ frame). The rotation
+  $X_\text{machine} = X_\text{global}\cdot e^{-j\delta}$, the
+  partitioned solver scheme, the Norton-augmented Y_bus trick, and
+  how PSSE/PowerWorld diagrams map onto smib code. Confirms what's
+  in the smib black-box and what's approximated vs full PSSE GENROU.
+  Read before reasoning about what the simulator is doing each
+  timestep.
 
 ## Repository layout (after Phase 1)
 

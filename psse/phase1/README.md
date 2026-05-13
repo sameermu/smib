@@ -9,7 +9,7 @@ industry reference.
 
 The Phase 1 notebook simulates this scenario:
 
-- 2-bus SMIB on a 100 MVA system base, 60 Hz
+- 2-bus SMIB on a 100 MVA system base, 50 Hz
 - Bus 101 = generator bus (GENCLS machine), Bus 102 = infinite bus (slack)
 - Line: R = 0, X = 0.5 pu (no resistance, lossless)
 - Operating point: P = 0.8 pu, Q = 0.2 pu injected at bus 101
@@ -127,6 +127,6 @@ To bisect on critical clearing time in PSSE (matching smib's §9):
   for inductive.  For a Z_f = j*0.10 pu fault, B = -10 pu (admittance
   -j*10, impedance j*0.10).
 - **Step size.** smib uses h = 2 ms.  PSSE's default `DELT` is 1/4
-  cycle ≈ 4.17 ms at 60 Hz.  Set `DELT = 0.002` or use the
+  cycle ≈ 5 ms at 50 Hz.  Set `DELT = 0.002` or use the
   `dynamics_solution_param_2(realar3=0.001)` call in the psspy
   script to match smib.

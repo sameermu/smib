@@ -37,7 +37,7 @@ def _setup(P=0.8, Q=0.2, X_line=0.5, H=4.0, D=0.0, Xdp=0.30):
     """Standard SMIB operating point used across tests."""
     V1, _ = two_bus_pf(P, Q, 1.0, 0.0, 0.0, X_line, bus_type="PQ")
     S = complex(P, Q)
-    gencls = GENCLS(H=H, D=D, Xdp=Xdp, f0=60.0)
+    gencls = GENCLS(H=H, D=D, Xdp=Xdp, f0=50.0)
     network = Network(R=0.0, X=X_line)
     gencls.initialise(V1, S)
     return gencls, network, V1, S

@@ -102,7 +102,7 @@ def _wrap_pi(x: float) -> float:
     return (x + math.pi) % (2 * math.pi) - math.pi
 
 
-def preset(name: str, f0: float = 60.0) -> dict:
+def preset(name: str, f0: float = 50.0) -> dict:
     """Return a params dict for a named preset.
 
     f0 is the nominal grid frequency in Hz.  omega_max_dev defaults to

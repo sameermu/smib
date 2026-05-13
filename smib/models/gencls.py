@@ -104,7 +104,7 @@ class GENCLS(Model):
                  H: float = 4.0,
                  D: float = 0.0,
                  Xdp: float = 0.30,
-                 f0: float = 60.0):
+                 f0: float = 50.0):
         """
         Parameters
         ----------

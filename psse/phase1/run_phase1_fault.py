@@ -87,7 +87,7 @@ def build_case():
     the smib initial conditions: P=0.8, Q=0.2 at gen bus 101, slack
     at bus 102, line X = 0.5 pu, no resistance."""
     # System base
-    psspy.base_frequency(60.0)
+    psspy.base_frequency(50.0)
 
     # Bus data: bus number, name, base kV, code (1=PQ, 2=PV, 3=slack)
     psspy.bus_data_4([101, 1, 0, 0, 0], [   0.0,  18.0,  1.0, 0.0,  1.1, 0.9, 1.1, 0.9], "GEN BUS")

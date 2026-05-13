@@ -9,7 +9,7 @@ GENROU model against the full PSSE GENROU.
 Same scenario as Phase 1 (same network, same operating point, same
 fault), but with a **GENROU machine** instead of GENCLS:
 
-- 2-bus SMIB on a 100 MVA system base, 60 Hz
+- 2-bus SMIB on a 100 MVA system base, 50 Hz
 - Bus 101 = generator bus (GENROU machine), Bus 102 = infinite bus
 - Line: R = 0, X = 0.5 pu
 - Operating point: P = 0.8 pu, Q = 0.2 pu

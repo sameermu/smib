@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 600" role="img"
+     style="font-family:system-ui,-apple-system,sans-serif">
+  <title>Partitioned solver: machines in dq, network in DQ</title>
+  <desc>Per-timestep data flow showing how machine differential
+        equations (in machine dq frames) and the algebraic network
+        solve (in stationary DQ) interleave, with rotation operators
+        bridging the two each step.</desc>
+
+  <rect width="980" height="600" fill="#FAFAFA"/>
+
+  <text x="490" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#1A1A1A">
+    Partitioned solver — per-timestep data flow
+  </text>
+  <text x="490" y="52" text-anchor="middle" font-size="12" fill="#555">
+    Differential equations live in each machine's rotating dq frame.  The algebraic V = Y·I lives in the stationary system DQ frame.  Rotation operators bridge them.
+  </text>
+
+  <defs>
+    <marker id="parr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- ===== TOP: Machine differential block (left) ===== -->
+  <g transform="translate(60, 100)">
+    <rect width="350" height="200" rx="8" fill="#FFE0B2" stroke="#E65100" stroke-width="2"/>
+    <text x="175" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#BF360C">
+      MACHINE — in rotor dq frame
+    </text>
+    <text x="175" y="42" text-anchor="middle" font-size="11" fill="#666">
+      one set per machine, each at its own δ
+    </text>
+
+    <text x="20" y="72" font-size="11" font-family="ui-monospace,monospace" fill="#222">Inputs:  V_d, V_q  (machine frame)</text>
+
+    <text x="20" y="100" font-size="11" font-family="ui-monospace,monospace" fill="#222">Compute stator currents from</text>
+    <text x="20" y="116" font-size="11" font-family="ui-monospace,monospace" fill="#222">algebraic output equations:</text>
+    <text x="20" y="134" font-size="11" font-family="ui-monospace,monospace" fill="#222">  I_d = (E'_q - V_q) / X'_d</text>
+    <text x="20" y="150" font-size="11" font-family="ui-monospace,monospace" fill="#222">  I_q = (V_d - E'_d) / X'_q</text>
+
+    <text x="20" y="178" font-size="11" font-family="ui-monospace,monospace" fill="#222">Then evaluate dx/dt for the 4 (or 6)</text>
+    <text x="20" y="194" font-size="11" font-family="ui-monospace,monospace" fill="#222">internal states (delta, omega, E'_q, ...)</text>
+  </g>
+
+  <!-- ===== ROTATION OPERATOR (right of machine) ===== -->
+  <g transform="translate(440, 160)">
+    <rect width="120" height="80" rx="6" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="2"/>
+    <text x="60" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#4A148C">
+      Rotation
+    </text>
+    <text x="60" y="40" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#4A148C">
+      I_global =
+    </text>
+    <text x="60" y="56" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#4A148C">
+      (I_q − jI_d)
+    </text>
+    <text x="60" y="72" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#4A148C">
+      · exp(j·δ)
+    </text>
+  </g>
+
+  <!-- arrow machine -> rotation -->
+  <path d="M 410 200 L 440 200" stroke="#333" stroke-width="2" marker-end="url(#parr)"/>
+  <text x="412" y="190" font-size="10" fill="#666">I_d, I_q</text>
+
+  <!-- ===== NETWORK ALGEBRAIC BLOCK (right top) ===== -->
+  <g transform="translate(590, 100)">
+    <rect width="350" height="200" rx="8" fill="#BBDEFB" stroke="#1565C0" stroke-width="2"/>
+    <text x="175" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#0D47A1">
+      NETWORK — in system DQ frame
+    </text>
+    <text x="175" y="42" text-anchor="middle" font-size="11" fill="#666">
+      shared by all machines, all loads, slack
+    </text>
+
+    <text x="20" y="72" font-size="11" font-family="ui-monospace,monospace" fill="#222">Inputs:  I_global from each machine</text>
+
+    <text x="20" y="100" font-size="11" font-family="ui-monospace,monospace" fill="#222">Solve KCL at every bus:</text>
+    <text x="20" y="118" font-size="13" font-family="ui-monospace,monospace" fill="#0D47A1" font-weight="700">  Y_bus · V_global = I_global</text>
+
+    <text x="20" y="146" font-size="11" font-family="ui-monospace,monospace" fill="#222">For SMIB this is a 2-bus linear system.</text>
+    <text x="20" y="162" font-size="11" font-family="ui-monospace,monospace" fill="#222">Norton-augmented Ybus folds the machine</text>
+    <text x="20" y="178" font-size="11" font-family="ui-monospace,monospace" fill="#222">admittance into Y_00 so the system stays</text>
+    <text x="20" y="194" font-size="11" font-family="ui-monospace,monospace" fill="#222">linear and closes in one shot.</text>
+  </g>
+
+  <!-- arrow rotation -> network -->
+  <path d="M 560 200 L 590 200" stroke="#333" stroke-width="2" marker-end="url(#parr)"/>
+  <text x="563" y="190" font-size="10" fill="#666">I_global</text>
+
+  <!-- ===== BOTTOM: feedback loop, network → rotation → machine ===== -->
+  <!-- arrow from network bottom out, then back left -->
+  <path d="M 765 300 L 765 380 L 500 380 L 500 320" fill="none" stroke="#333" stroke-width="2" marker-end="url(#parr)"/>
+  <text x="540" y="375" font-size="11" fill="#666">V_global from network solve</text>
+
+  <!-- ===== BOTTOM ROTATION OPERATOR ===== -->
+  <g transform="translate(440, 320)">
+    <rect width="120" height="80" rx="6" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="2"/>
+    <text x="60" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#4A148C">
+      Rotation
+    </text>
+    <text x="60" y="40" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#4A148C">
+      V_q + j·(−V_d) =
+    </text>
+    <text x="60" y="56" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#4A148C">
+      V_global ·
+    </text>
+    <text x="60" y="72" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#4A148C">
+      exp(−j·δ)
+    </text>
+  </g>
+
+  <!-- arrow from rotation bottom -> machine -->
+  <path d="M 440 360 L 235 360 L 235 300" fill="none" stroke="#333" stroke-width="2" marker-end="url(#parr)"/>
+  <text x="250" y="375" font-size="11" fill="#666">V_d, V_q (machine frame)</text>
+
+  <!-- Bottom commentary -->
+  <g transform="translate(60, 430)">
+    <rect width="880" height="150" rx="6" fill="white" stroke="#888"/>
+    <text x="15" y="24" font-size="13" font-weight="700" fill="#222">Per-timestep procedure</text>
+    <text x="15" y="46" font-size="11" fill="#222">
+      <tspan font-weight="700">1.</tspan> Each machine, given its current internal state and a guess for V at its terminal, computes I_d and I_q from its
+    </text>
+    <text x="15" y="62" font-size="11" fill="#222">     algebraic output equations (the orange box).  These are LINEAR in V given fixed internal states.</text>
+    <text x="15" y="82" font-size="11" fill="#222">
+      <tspan font-weight="700">2.</tspan> Rotate (I_d, I_q) → I_global via the inverse rotation (purple box, top).  Now we have a current in system DQ.
+    </text>
+    <text x="15" y="102" font-size="11" fill="#222">
+      <tspan font-weight="700">3.</tspan> Solve V_global = Y_bus⁻¹ · I_inject for the system (the blue box).  Y_bus is constant; we usually fold each machine's
+    </text>
+    <text x="15" y="118" font-size="11" fill="#222">     Norton admittance into the bus diagonal so the per-step solve is one matrix multiply, no fixed-point.</text>
+    <text x="15" y="138" font-size="11" fill="#222">
+      <tspan font-weight="700">4.</tspan> Rotate V_global → (V_d, V_q) via the forward rotation (purple box, bottom).  Hand it back to the machine to compute dx/dt.  Step the integrator.
+    </text>
+  </g>
+</svg>

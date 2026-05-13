@@ -163,7 +163,7 @@ class GENROU(Model):
                  # mechanical
                  H: float = 4.0,
                  D: float = 0.0,
-                 f0: float = 60.0,
+                 f0: float = 50.0,
                  # d-axis (full GENROU has Xdpp; we ignore it in 4-state)
                  Xd: float = 1.81, Xdp: float = 0.30,
                  Tdo_p: float = 8.0,
