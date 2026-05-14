@@ -8,8 +8,8 @@ an industry simulator on a curated case?"
 
 ## Project status
 
-Update this section as phases land.  Last update: Phase 2.1 shipped
-(GENROU + ST1A AVR — model, tests, notebook, PSSE benchmark all
+Update this section as phases land.  Last update: Phase 2.2 shipped
+(GENROU + ST1A + PSS1A — model, tests, notebook, PSSE benchmark all
 landed).
 
 | Phase | Scope | Status |
@@ -18,7 +18,7 @@ landed).
 | **1** — GENCLS | classical machine on SMIB, full notebook + PSSE benchmark | ✅ done |
 | **2.0** — GENROU bare | round-rotor 4-state two-axis transient model | ✅ done |
 | **2.1** — + ST1A AVR | static exciter, voltage-step + CCT-lift headlines | ✅ done |
-| **2.2** — + PSS1A | power system stabiliser, headline "with vs without PSS" plot | ⏳ pending |
+| **2.2** — + PSS1A | power system stabiliser, headline damping comparison | ✅ done |
 | **2.3** — + TGOV1 | turbine governor, primary frequency response | ⏳ pending |
 | **3** — IBR generic | REGC_A + REEC_A + REPC_A, weak-grid SCR sweep | ⏳ pending |
 | **4** — IBR grid-forming | REGFM_A1, side-by-side with Phase 3 | ⏳ pending |
@@ -93,6 +93,32 @@ pedagogy rules applied.
   gap to the GENCLS reference (339 ms) — for different physics:
   GENCLS ignores the sag entirely, AVR cancels the sag via field
   forcing.
+
+**Phase 2.2 — DONE**:
+
+- ✅ `smib/models/pss1a.py` — IEEE 421.5 §6.1 PSS1A, 3-state form
+  (washout + 2× lead-lag).  Defaults: Tw=5, T1=T3=0.5, T2=T4=0.05,
+  Ks=20, Vpssmax=±0.10.  Two stages of phase compensation give
+  ~+90° at the 0.7 Hz swing frequency, exactly cancelling the
+  rotor-flux phase lag.
+- ✅ `run_smib_genrou_avr_pss()` 3-model simulator harness.  Signal
+  flow: `|V| → AVR, ω̄ → PSS → Vpss → AVR.summer → Efd → GENROU`.
+  Combined 9-state vector (4 GENROU + 2 ST1A + 3 PSS1A).
+- ✅ `tests/test_pss1a.py` — 5/5 tests pass (flat-line,
+  zero-at-init, Ks=0 bypass equals Phase 2.1, ≥30% damping
+  improvement, no CCT regression).  Full suite now 23/23.
+- ✅ `notebooks/phase2_2_pss.ipynb` — 20 cells.  Includes §6 the
+  explicit Norton-equivalent + Y-matrix-per-timestep walkthrough
+  the user requested (saliency-aware 2×2 M(δ) and c, KCL closure,
+  one np.linalg.solve per corrector pass).  Headline §7 shows
+  AVR-on vs PSS-on overlay; §8 plots the PSS signal anatomy.
+- ✅ `psse/phase2_2/` — `smib_phase2_2.dyr` (GENROU + ST1A + PSS1A),
+  psspy automation, full reference numbers.
+- ✅ **Headline result**: **PSS cuts late-window (4-8 s)
+  oscillation peak-to-peak from 27.9° to 12.8° (54% reduction)** on
+  the deep inductive fault.  CCT unchanged at 325 ms — the PSS is a
+  small-signal damping device, not a first-swing stability
+  enhancer.
 
 ## Confirming the smib black-box
 

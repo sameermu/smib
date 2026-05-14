@@ -11,7 +11,8 @@ against the industry reference.
   as Phase 1.  See `phase2_0/README.md`.
 - `phase2_1/` — GENROU + ST1A AVR, voltage-step + deep fault scenarios.
   See `phase2_1/README.md`.
-- `phase2_2/` — GENROU + ST1A + PSS1A (coming once Phase 2.2 lands).
+- `phase2_2/` — GENROU + ST1A + PSS1A, headline PSS-on damping plot.
+  See `phase2_2/README.md`.
 - `phase2_3/` — GENROU + ST1A + PSS1A + TGOV1 (coming once Phase 2.3 lands).
 
 ## What to compare

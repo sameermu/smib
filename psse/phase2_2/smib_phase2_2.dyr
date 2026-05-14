@@ -1,0 +1,14 @@
+/
+/  smib Phase 2.2 — GENROU + ST1A + PSS1A on SMIB
+/  Bus 101 (gen), machine ID '1 '.  All on 100 MVA system base, 50 Hz.
+/
+/  GENROU (Kundur Table 4.2, with D=3 load damping):
+   101 'GENROU' 1   8.0  0.03  1.0  0.07  4.0  3.0  1.81  1.76  0.30  0.65  0.23  0.16  0.13  0.50  /
+/
+/  ST1A (smib defaults with transient gain reduction, Tb=20):
+   101 'ST1A'  1   0.02  99.0  -99.0  1.0  20.0  200.0  0.01  7.0  -6.4  0.0  0.0  1.0  /
+/
+/  PSS1A parameter order (IEEE 421.5 §6.1, simplified):
+/    BUS 'PSS1A' ID  Vstmin Vstmax Tw  T1  T2  T3  T4  Ks  /
+/  Values:                ±0.10  5.0 0.5 0.05 0.5 0.05 20  /
+   101 'PSS1A' 1  -0.10  0.10  5.0  0.5  0.05  0.5  0.05  20.0  /
