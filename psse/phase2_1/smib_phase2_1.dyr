@@ -18,4 +18,4 @@
 /  versions, so use Ta = 0.01; Kc = 0; Kf = 0; Tf = 1.0 — Tf cannot
 /  be zero, but Kf = 0 makes the rate feedback inactive).
 /
-   101 'ST1A'  1   0.02  99.0  -99.0  1.0  1.0  200.0  0.01  7.0  -6.4  0.0  0.0  1.0  /
+   101 'ST1A'  1   0.02  99.0  -99.0  1.0  20.0  200.0  0.01  7.0  -6.4  0.0  0.0  1.0  /

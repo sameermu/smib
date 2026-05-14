@@ -208,11 +208,16 @@ def test_st1a_voltage_step_moves_correctly():
     Efd_final = res.traces["Efd"][-1]
     dVt = Vt_final - Vt0
     dEfd = Efd_final - Efd0
-    assert dVt > 0.005, (
+    # Direction-of-response checks.  Magnitudes are intentionally loose —
+    # the ST1A's transient-gain reduction (Tb >> Tc) makes the long-time
+    # settle slow (T'_d0 = 8 s plus Tb = 10 s), so the test should not
+    # prescribe how fast.  It only asserts the loop sign is right and
+    # the regulator is doing nonzero work.
+    assert dVt > 0.001, (
         f"Vref step did not push Vt up: Vt_final - Vt0 = {dVt:+.4f} pu"
     )
-    assert dEfd > 0.5, (
-        f"Efd response too small for a 2 % Vref step: dEfd = {dEfd:+.3f} pu"
+    assert dEfd > 0.05, (
+        f"Efd response is the wrong sign or too small: dEfd = {dEfd:+.3f} pu"
     )
 
 

@@ -26,9 +26,9 @@ AVR parameters (smib defaults, see `smib_phase2_1.dyr`):
 | Parameter | Value | Meaning |
 |---|---|---|
 | Tr     | 0.02 s | voltage-transducer time constant |
-| Ka     | 200    | regulator gain |
-| Tb     | 1.0 s  | lead-lag pole |
-| Tc     | 1.0 s  | lead-lag zero (= Tb means pure-gain LL) |
+| Ka     | 200    | steady-state regulator gain |
+| Tb     | 20.0 s | lead-lag pole (transient gain reduction) |
+| Tc     | 1.0 s  | lead-lag zero; gain at swing freq = Ka·Tc/(Tb·ωn) |
 | Vrmax  | +7.0   | field voltage upper limit (ceiling) |
 | Vrmin  | -6.4   | field voltage lower limit |
 | Kc     | 0      | rate-of-change limit (off in smib) |
@@ -66,8 +66,8 @@ AVR parameters (smib defaults, see `smib_phase2_1.dyr`):
 | Vc nadir during fault  | 0.29 pu        | sensed terminal voltage |
 | E'q nadir during fault | 0.92 pu        | nearly no sag — AVR cancels it |
 | Peak rotor angle (AVR on)  | 102.8°     | vs 111.2° AVR-off |
-| **Deep-fault CCT**     | **327 ms**     | vs 275 ms AVR-off |
-| AVR lift over bare GENROU | **+52 ms (+19 %)** | the headline number |
+| **Deep-fault CCT**     | **325 ms**     | vs 275 ms AVR-off |
+| AVR lift over bare GENROU | **+50 ms (+18 %)** | the headline number |
 
 (All numbers use load damping D = 3.)
 
@@ -87,7 +87,7 @@ This is the headline summary table from Phase 2.1 §8:
 |---|---|---|
 | GENCLS (Phase 1)              | 339 ms | overestimate — no E'q sag |
 | GENROU bare (Phase 2.0)       | 275 ms | most conservative — full sag |
-| GENROU + ST1A AVR (Phase 2.1) | 327 ms | AVR force-fields rotor flux |
+| GENROU + ST1A AVR (Phase 2.1) | 325 ms | AVR force-fields rotor flux |
 
 GENCLS and GENROU+AVR happen to agree closely on CCT for this case,
 but for very different reasons: GENCLS doesn't model the sag at all
@@ -164,7 +164,7 @@ inductive fault, and writes `smib_phase2_1_fault.out`.
 
 ## CCT comparison protocol
 
-To bisect on CCT in PSSE matching the smib §8 result of 327 ms
+To bisect on CCT in PSSE matching the smib §8 result of 325 ms
 (with D = 3):
 
 1. Run the script repeatedly with different fault durations.

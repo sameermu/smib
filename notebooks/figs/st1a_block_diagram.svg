@@ -15,7 +15,7 @@
     ST1A — IEEE 421.5 static exciter (simplified, no OEL / UEL / rate feedback)
   </text>
   <text x="480" y="48" text-anchor="middle" font-size="12" fill="#555">
-    Two states: Vc (sensed voltage) and x_LL (lead-lag internal).  At steady state error = Efd / Ka.
+    Two states: Vc (sensed voltage) and x_LL (lead-lag internal).  Defaults Tc=1 s, Tb=20 s give transient gain reduction — full Ka at DC, ~Ka·Tc/Tb at the swing frequency.
   </text>
 
   <!-- |V_t| input -->

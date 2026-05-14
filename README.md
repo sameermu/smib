@@ -86,10 +86,13 @@ pedagogy rules applied.
   ST1A in `smib_phase2_1.dyr` (Kundur Table 4.2 + smib AVR
   defaults), psspy automation, full reference-numbers table.
 - ✅ **Headline result**: **AVR lifts CCT from 275 ms (bare GENROU)
-  to 327 ms (+52 ms, +19 %)** on the deep inductive fault at D = 3
-  load damping.  Closes most of the gap to the GENCLS reference
-  (339 ms) — for different physics: GENCLS ignores the sag entirely,
-  AVR cancels the sag via field forcing.
+  to 325 ms (+50 ms, +18 %)** on the deep inductive fault at D = 3
+  load damping, with the AVR's lead-lag tuned for transient gain
+  reduction (Tc = 1 s, Tb = 20 s) so post-fault rotor oscillations
+  damp visibly within the simulation window.  Closes most of the
+  gap to the GENCLS reference (339 ms) — for different physics:
+  GENCLS ignores the sag entirely, AVR cancels the sag via field
+  forcing.
 
 ## Confirming the smib black-box
 

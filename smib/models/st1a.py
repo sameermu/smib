@@ -30,7 +30,10 @@ States (3 total)
 We end up with **2 states** in this simplified form:
 
     Vc      — sensed terminal voltage, time constant Tr ~ 0.01-0.05 s
-    x_LL    — lead-lag internal state, time constants Tc (zero) and Tb (pole)
+    x_LL    — lead-lag internal state, time constants Tc (zero) and Tb (pole).
+              With the default Tb=10, Tc=1 this acts as transient gain
+              reduction: full Ka at DC, Ka·Tc/Tb at frequencies above
+              the pole.  See `__init__` docstring for the rationale.
 
 Differential equations
 ----------------------
@@ -92,17 +95,26 @@ class ST1A(Model):
     def __init__(self,
                  name: str = "ST1A",
                  Tr: float = 0.02,        # voltage transducer time constant [s]
-                 Ka: float = 200.0,       # regulator gain
+                 Ka: float = 200.0,       # regulator gain (steady-state)
                  Ta: float = 0.0,         # placeholder (not used in this simplified form)
-                 Tb: float = 1.0,         # lead-lag pole [s]
+                 Tb: float = 20.0,        # lead-lag pole [s]  — transient gain reduction
                  Tc: float = 1.0,         # lead-lag zero [s]
                  Vrmax: float = 7.0,      # field voltage upper limit (ceiling)
                  Vrmin: float = -6.4):    # field voltage lower limit (negative ceiling)
-        """Default parameters: typical thermal-unit ST1A values from
-        IEEE 421.5 examples.  Tc/Tb = 1 means the lead-lag is a pure
-        gain (the lead and lag time constants cancel exactly), which
-        is a common simplification used to remove a free parameter
-        for pedagogy.  Set Tb > Tc for true lead behaviour.
+        """Default parameters — typical thermal-unit ST1A values from
+        IEEE 421.5 examples with **transient gain reduction (TGR)**.
+
+        Tb > Tc gives the lead-lag a low-pass character: DC gain is 1
+        (full Ka for steady-state voltage regulation) but at the rotor
+        swing frequency (~0.7 Hz on this SMIB) the effective gain is
+        Ka·Tc/Tb / |1 + jωTb| ≈ Ka·Tc/Tb = 20 instead of 200.  This
+        is the textbook way to keep high steady-state accuracy without
+        destabilising the electromechanical mode — exactly the role a
+        Power System Stabiliser fills more aggressively in Phase 2.2.
+
+        Set Tc = Tb (pure-gain lead-lag) to revert to the un-detuned
+        form; it's pedagogically clean but produces poorly-damped
+        post-fault rotor oscillations.
         """
         params = {
             "Tr": Tr, "Ka": Ka, "Ta": Ta, "Tb": Tb, "Tc": Tc,
