@@ -244,6 +244,157 @@ def linearise_genrou_avr(genrou, avr, network, V_op: complex, S_op: complex,
 
 
 # =====================================================================
+# Closed-loop linearisation: GENROU + ST1A + PSS1A
+# =====================================================================
+
+def linearise_genrou_avr_pss(genrou, avr, pss, network,
+                             V_op: complex, S_op: complex,
+                             eps: float = 1e-6) -> StateSpace:
+    """Linearise GENROU + ST1A + PSS1A around (V_op, S_op).
+
+    State x = (delta, omega, Eqp, Edp, Vc, x_LL, x_w, x_LL1, x_LL2).
+    Inputs u = (Vref, Pm, Vpss_ext).  Vpss_ext is an *external* Vpss
+    injection on top of whatever the PSS itself produces, useful for
+    perturbing the PSS path.
+    Outputs as before plus Vpss.
+    """
+    from .simulator import _solve_network_with_genrou
+    genrou.initialise(V_op, S_op)
+    avr.initialise(V_op, S_op, Efd_init=genrou.params["Efd"])
+    pss.initialise()
+
+    n_g = len(genrou.state_keys)
+    n_a = len(avr.state_keys)
+    n_p = len(pss.state_keys)
+
+    def _combine():
+        return np.concatenate([genrou.flatten(), avr.flatten(), pss.flatten()])
+
+    def _set_combined(x):
+        genrou.unflatten(x[:n_g])
+        avr.unflatten(x[n_g:n_g + n_a])
+        pss.unflatten(x[n_g + n_a:])
+
+    x0 = _combine()
+    Vref0 = avr.params["Vref"]
+    Pm0 = genrou.params["Pm"]
+    Vpss_ext0 = 0.0  # external probe
+
+    def _eval_derivs(x):
+        _set_combined(x)
+        V = _solve_network_with_genrou(x[:n_g], genrou, network)
+        pss.inputs["Delta_omega"] = genrou.state["omega"]
+        pss.derivatives()
+        Vpss_total = pss.algebraic_output()["Vpss"] + Vpss_ext0
+        avr.inputs["V_terminal_mag"] = abs(V)
+        avr.inputs["Vpss"] = Vpss_total
+        avr.derivatives()
+        genrou.params["Efd"] = avr.algebraic_output()["Efd"]
+        genrou.inputs["V_terminal"] = V
+        d_g = genrou.derivatives()
+        d_a = avr.derivatives()
+        d_p = pss.derivatives()
+        return np.concatenate([
+            np.array([d_g[k] for k in genrou.state_keys]),
+            np.array([d_a[k] for k in avr.state_keys]),
+            np.array([d_p[k] for k in pss.state_keys]),
+        ])
+
+    def _eval_outputs(x):
+        _set_combined(x)
+        V = _solve_network_with_genrou(x[:n_g], genrou, network)
+        pss.inputs["Delta_omega"] = genrou.state["omega"]
+        pss.derivatives()
+        Vpss_total = pss.algebraic_output()["Vpss"] + Vpss_ext0
+        avr.inputs["V_terminal_mag"] = abs(V)
+        avr.inputs["Vpss"] = Vpss_total
+        avr.derivatives()
+        genrou.params["Efd"] = avr.algebraic_output()["Efd"]
+        genrou.inputs["V_terminal"] = V
+        genrou.derivatives()
+        out = genrou.algebraic_output()
+        avr_out = avr.algebraic_output()
+        pss_out = pss.algebraic_output()
+        return np.array([out["|V|"], out["P"], out["Q"],
+                         out["Id"], out["Iq"], out["Pe"],
+                         genrou.state["delta"], genrou.state["omega"],
+                         genrou.state["Eqp"], avr_out["Efd"],
+                         pss_out["Vpss"]])
+
+    # Use a non-local for Vpss_ext so the closures pick up changes.
+    container = {"Vpss_ext": 0.0}
+    def _eval_derivs_with_u(u):
+        avr.params["Vref"] = float(u[0])
+        genrou.params["Pm"] = float(u[1])
+        container["Vpss_ext"] = float(u[2])
+        # re-eval but with the external Vpss added
+        _set_combined(x0)
+        V = _solve_network_with_genrou(x0[:n_g], genrou, network)
+        pss.inputs["Delta_omega"] = genrou.state["omega"]
+        pss.derivatives()
+        Vpss_total = pss.algebraic_output()["Vpss"] + container["Vpss_ext"]
+        avr.inputs["V_terminal_mag"] = abs(V)
+        avr.inputs["Vpss"] = Vpss_total
+        avr.derivatives()
+        genrou.params["Efd"] = avr.algebraic_output()["Efd"]
+        genrou.inputs["V_terminal"] = V
+        d_g = genrou.derivatives()
+        d_a = avr.derivatives()
+        d_p = pss.derivatives()
+        return np.concatenate([
+            np.array([d_g[k] for k in genrou.state_keys]),
+            np.array([d_a[k] for k in avr.state_keys]),
+            np.array([d_p[k] for k in pss.state_keys]),
+        ])
+
+    def _eval_outputs_with_u(u):
+        avr.params["Vref"] = float(u[0])
+        genrou.params["Pm"] = float(u[1])
+        container["Vpss_ext"] = float(u[2])
+        _set_combined(x0)
+        V = _solve_network_with_genrou(x0[:n_g], genrou, network)
+        pss.inputs["Delta_omega"] = genrou.state["omega"]
+        pss.derivatives()
+        Vpss_total = pss.algebraic_output()["Vpss"] + container["Vpss_ext"]
+        avr.inputs["V_terminal_mag"] = abs(V)
+        avr.inputs["Vpss"] = Vpss_total
+        avr.derivatives()
+        genrou.params["Efd"] = avr.algebraic_output()["Efd"]
+        genrou.inputs["V_terminal"] = V
+        genrou.derivatives()
+        out = genrou.algebraic_output()
+        avr_out = avr.algebraic_output()
+        pss_out = pss.algebraic_output()
+        return np.array([out["|V|"], out["P"], out["Q"],
+                         out["Id"], out["Iq"], out["Pe"],
+                         genrou.state["delta"], genrou.state["omega"],
+                         genrou.state["Eqp"], avr_out["Efd"],
+                         pss_out["Vpss"]])
+
+    A = numerical_jacobian(_eval_derivs, x0, eps)
+    C = numerical_jacobian(_eval_outputs, x0, eps)
+    avr.params["Vref"] = Vref0
+    genrou.params["Pm"] = Pm0
+    container["Vpss_ext"] = 0.0
+    u0 = np.array([Vref0, Pm0, 0.0])
+    B = numerical_jacobian(_eval_derivs_with_u, u0, eps)
+    D = numerical_jacobian(_eval_outputs_with_u, u0, eps)
+    # Restore
+    avr.params["Vref"] = Vref0
+    genrou.params["Pm"] = Pm0
+    _set_combined(x0)
+
+    return StateSpace(
+        A=A, B=B, C=C, D=D,
+        state_names=("delta", "omega", "Eqp", "Edp", "Vc", "x_LL",
+                     "x_w", "x_LL1", "x_LL2"),
+        input_names=("Vref", "Pm", "Vpss_ext"),
+        output_names=("|V|", "P", "Q", "Id", "Iq", "Te",
+                      "delta", "omega", "Eqp", "Efd", "Vpss"),
+    )
+
+
+# =====================================================================
 # Transfer-function extraction
 # =====================================================================
 
@@ -434,7 +585,7 @@ def eigenmodes(ss: StateSpace) -> list[Mode]:
 __all__ = [
     "StateSpace", "Mode",
     "numerical_jacobian",
-    "linearise_genrou", "linearise_genrou_avr",
+    "linearise_genrou", "linearise_genrou_avr", "linearise_genrou_avr_pss",
     "siso_tf", "series",
     "avr_st1a_tf", "pss1a_tf",
     "bode", "nyquist", "stability_margins",
