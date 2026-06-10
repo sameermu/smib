@@ -30,3 +30,6 @@ pytest-cache-files-*/
 # OS
 .DS_Store
 Thumbs.db
+
+# Reference documents — never commit (copyright + size)
+*.pdf
