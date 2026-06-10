@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="330" viewBox="0 0 980 330" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .net  { fill:#E3F2FD; stroke:#1565C0; stroke-width:1.5; }
+    .net2 { fill:#FFF3E0; stroke:#EF6C00; stroke-width:1.5; }
+    .net0 { fill:#E8F5E9; stroke:#2E7D32; stroke-width:1.5; }
+    .zf   { fill:#FFEBEE; stroke:#C62828; stroke-width:1.5; }
+    .lbl  { font-size:13px; fill:#212121; }
+    .ttl  { font-size:14px; font-weight:bold; fill:#212121; }
+    .wire { stroke:#424242; stroke-width:1.5; fill:none; }
+    .eq   { font-size:12px; fill:#424242; font-style:italic; }
+  </style>
+
+  <!-- ============ 3-phase ============ -->
+  <text x="60" y="22" class="ttl">3&#966; (bolted/Zf)</text>
+  <rect x="20" y="40" width="120" height="44" class="net"/>
+  <text x="80" y="66" class="lbl" text-anchor="middle">positive  Z&#8321;, V_F</text>
+  <path class="wire" d="M20,62 L8,62 L8,150 L66,150"/>
+  <path class="wire" d="M140,62 L152,62 L152,150 L94,150"/>
+  <rect x="66" y="136" width="28" height="28" class="zf"/>
+  <text x="80" y="154" class="lbl" text-anchor="middle">Z_f</text>
+  <text x="80" y="190" class="eq" text-anchor="middle">I&#8321; = V_F / (Z&#8321;+Z_f)</text>
+  <text x="80" y="208" class="eq" text-anchor="middle">I&#8322; = I&#8320; = 0</text>
+
+  <!-- ============ 1phg: series ============ -->
+  <text x="300" y="22" class="ttl">1&#966;g (series)</text>
+  <rect x="240" y="40" width="120" height="36" class="net"/>
+  <text x="300" y="62" class="lbl" text-anchor="middle">positive  Z&#8321;, V_F</text>
+  <rect x="240" y="92" width="120" height="36" class="net2"/>
+  <text x="300" y="114" class="lbl" text-anchor="middle">negative  Z&#8322;</text>
+  <rect x="240" y="144" width="120" height="36" class="net0"/>
+  <text x="300" y="166" class="lbl" text-anchor="middle">zero  Z&#8320;</text>
+  <path class="wire" d="M300,76 L300,92"/>
+  <path class="wire" d="M300,128 L300,144"/>
+  <path class="wire" d="M240,58 L226,58 L226,236 L286,236"/>
+  <path class="wire" d="M360,162 L374,162 L374,236 L314,236"/>
+  <rect x="286" y="222" width="28" height="28" class="zf"/>
+  <text x="300" y="240" class="lbl" text-anchor="middle">3Z_f</text>
+  <text x="300" y="282" class="eq" text-anchor="middle">I&#8321;=I&#8322;=I&#8320;</text>
+  <text x="300" y="300" class="eq" text-anchor="middle">= V_F /(Z&#8321;+Z&#8322;+Z&#8320;+3Z_f)</text>
+
+  <!-- ============ LL: parallel pos/neg ============ -->
+  <text x="540" y="22" class="ttl">LL (parallel)</text>
+  <rect x="470" y="40" width="120" height="44" class="net"/>
+  <text x="530" y="66" class="lbl" text-anchor="middle">positive  Z&#8321;, V_F</text>
+  <rect x="640" y="40" width="120" height="44" class="net2"/>
+  <text x="700" y="66" class="lbl" text-anchor="middle">negative  Z&#8322;</text>
+  <rect x="601" y="48" width="28" height="28" class="zf"/>
+  <text x="615" y="66" class="lbl" text-anchor="middle">Z_f</text>
+  <path class="wire" d="M590,62 L601,62"/>
+  <path class="wire" d="M629,62 L640,62"/>
+  <path class="wire" d="M470,62 L456,62 L456,120 L774,120 L774,62 L760,62"/>
+  <text x="615" y="160" class="eq" text-anchor="middle">I&#8321; = &#8722;I&#8322; = V_F /(Z&#8321;+Z&#8322;+Z_f),   I&#8320; = 0</text>
+
+  <!-- ============ 2phg ============ -->
+  <text x="540" y="210" class="ttl">2&#966;g (series + parallel)</text>
+  <rect x="470" y="228" width="120" height="44" class="net"/>
+  <text x="530" y="254" class="lbl" text-anchor="middle">positive  Z&#8321;, V_F</text>
+  <rect x="640" y="228" width="110" height="44" class="net2"/>
+  <text x="695" y="254" class="lbl" text-anchor="middle">negative  Z&#8322;</text>
+  <rect x="790" y="228" width="150" height="44" class="net0"/>
+  <text x="865" y="248" class="lbl" text-anchor="middle">zero  Z&#8320;</text>
+  <text x="865" y="264" class="lbl" text-anchor="middle">(+3Z_f in branch)</text>
+  <path class="wire" d="M590,250 L640,250"/>
+  <path class="wire" d="M750,250 L790,250"/>
+  <path class="wire" d="M470,250 L456,250 L456,300 L960,300 L960,250 L940,250"/>
+  <path class="wire" d="M695,272 L695,300"/>
+  <text x="700" y="320" class="eq" text-anchor="middle">I&#8321; = V_F / ( Z&#8321; + Z&#8322;&#8741;(Z&#8320;+3Z_f) )</text>
+</svg>

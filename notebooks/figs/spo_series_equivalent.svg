@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="330" viewBox="0 0 940 330" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .lbl  { font-size:13px; fill:#212121; }
+    .ttl  { font-size:14px; font-weight:bold; fill:#212121; }
+    .sub  { font-size:12px; fill:#616161; font-style:italic; }
+    .wire { stroke:#424242; stroke-width:1.8; fill:none; }
+    .box1 { fill:#E3F2FD; stroke:#1565C0; stroke-width:1.5; }
+    .box2 { fill:#FFF3E0; stroke:#EF6C00; stroke-width:1.5; }
+    .box0 { fill:#E8F5E9; stroke:#2E7D32; stroke-width:1.5; }
+    .open { stroke:#C62828; stroke-width:2.0; fill:none; }
+  </style>
+
+  <text x="20" y="24" class="ttl">Single pole open (phase a) at point P on the line &#8212; series sequence connection</text>
+
+  <!-- positive sequence path with break -->
+  <text x="20" y="62" class="lbl">positive-sequence path:</text>
+  <circle cx="60" cy="100" r="16" fill="none" stroke="#424242" stroke-width="1.8"/>
+  <text x="60" y="105" class="lbl" text-anchor="middle">E'</text>
+  <path class="wire" d="M76,100 L116,100"/>
+  <rect x="116" y="86" width="74" height="28" class="box1"/>
+  <text x="153" y="104" class="lbl" text-anchor="middle">jX'd</text>
+  <path class="wire" d="M190,100 L250,100"/>
+  <rect x="250" y="86" width="90" height="28" class="box1"/>
+  <text x="295" y="104" class="lbl" text-anchor="middle">jX&#8321;,left</text>
+  <path class="wire" d="M340,100 L380,100"/>
+  <!-- break P-P' -->
+  <circle cx="380" cy="100" r="3" fill="#C62828"/>
+  <circle cx="440" cy="100" r="3" fill="#C62828"/>
+  <text x="382" y="84" class="sub">P</text>
+  <text x="432" y="84" class="sub">P'</text>
+  <!-- series inserted impedance -->
+  <rect x="372" y="120" width="76" height="30" class="box2"/>
+  <text x="410" y="139" class="lbl" text-anchor="middle">Z&#8322;pp'&#8741;Z&#8320;pp'</text>
+  <path class="wire" d="M380,100 L380,135 L372,135 M448,135 L440,135 L440,100"/>
+  <path class="wire" d="M440,100 L480,100"/>
+  <rect x="480" y="86" width="94" height="28" class="box1"/>
+  <text x="527" y="104" class="lbl" text-anchor="middle">jX&#8321;,right</text>
+  <path class="wire" d="M574,100 L620,100"/>
+  <rect x="620" y="70" width="10" height="60" fill="#212121"/>
+  <text x="626" y="62" class="lbl" text-anchor="middle">infinite bus</text>
+
+  <text x="20" y="196" class="lbl">Z&#8322;pp' and Z&#8320;pp' are the negative- / zero-sequence impedances measured across the break</text>
+  <text x="20" y="216" class="lbl">(sources zeroed).  For a radial SMIB they are loop sums:</text>
+  <text x="60" y="244" class="lbl" font-style="italic">Z&#8322;pp' = jX&#8322;,mach + jX&#8322;,line        Z&#8320;pp' = jX&#8320;,GSU + jX&#8320;,line</text>
+  <text x="20" y="280" class="lbl">The faulted phase is isolated, but phases b and c keep transferring synchronising power:</text>
+  <text x="60" y="304" class="lbl" font-style="italic">X&#8321;,total during the dead time = X'd + X&#8321;,line + Im(Z&#8322;pp'&#8741;Z&#8320;pp')</text>
+</svg>
