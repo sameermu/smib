@@ -8,8 +8,9 @@ an industry simulator on a curated case?"
 
 ## Project status
 
-Update this section as phases land.  Last update: Phase 2.2 shipped
-(GENROU + ST1A + PSS1A — model, tests, notebook, PSSE benchmark all
+Update this section as phases land.  Last update: Phase 2.3 shipped
+(GENROU + ST1A + PSS1A + TGOV1 — the classical synchronous plant
+stack is complete: model, tests, notebook, PSSE benchmark all
 landed).
 
 | Phase | Scope | Status |
@@ -19,7 +20,7 @@ landed).
 | **2.0** — GENROU bare | round-rotor 4-state two-axis transient model | ✅ done |
 | **2.1** — + ST1A AVR | static exciter, voltage-step + CCT-lift headlines | ✅ done |
 | **2.2** — + PSS1A | power system stabiliser, headline damping comparison | ✅ done |
-| **2.3** — + TGOV1 | turbine governor, primary frequency response | ⏳ pending |
+| **2.3** — + TGOV1 | turbine governor, primary frequency response | ✅ done |
 | **3** — IBR generic | REGC_A + REEC_A + REPC_A, weak-grid SCR sweep | ⏳ pending |
 | **4** — IBR grid-forming | REGFM_A1, side-by-side with Phase 3 | ⏳ pending |
 | **5** — Reactive support | SVSMO3 SVC, CSTATT STATCOM, SynCon | ⏳ pending |
@@ -119,6 +120,43 @@ pedagogy rules applied.
   the deep inductive fault.  CCT unchanged at 325 ms — the PSS is a
   small-signal damping device, not a first-swing stability
   enhancer.
+
+**Phase 2.3 — DONE**:
+
+- ✅ `smib/models/tgov1.py` — PSSE/PES-TR1 TGOV1 steam governor,
+  2-state form (x_v valve servo with non-windup Vmax/Vmin limits +
+  x_r reheat lead-lag internal).  Defaults: R=0.05, T1=0.5,
+  T2=2.5, T3=7.5, Vmax=1.0, Vmin=0.0, Dt=0.
+- ✅ `run_smib_genrou_avr_pss_gov()` 4-model simulator harness.
+  Signal flow: `|V| → AVR, ω̄ → PSS → Vpss → AVR → Efd → GENROU`
+  and `ω̄ → GOV → Pm → GENROU`.  Combined 11-state vector — Pm is
+  now a live model output, recomputed inside every corrector
+  iteration like Efd has been since Phase 2.1.
+- ✅ `grid_frequency_ramp_schedule()` in `scenarios.py` — emulates a
+  system frequency event via the infinite-bus angle ramp (the
+  master-plan §5.2 mechanism).  Composable: schedule a −Δf event
+  and a later +Δf recovery in the same run.
+- ✅ `tests/test_tgov1.py` — 5/5 tests pass (flat-line at machine
+  epsilon, init self-consistency incl. the Pref factor-of-20 trap,
+  droop steady state ΔPm = −Δω̄/R within 2 %, governor-locked →
+  Phase 2.2 CCT equivalence, valve ceiling + anti-windup release).
+- ✅ `notebooks/phase2_3_governor.ipynb` — 24 cells.  §4 manual
+  Pref back-calc vs encapsulated init side-by-side; §6 refreshed
+  per-timestep pseudocode with the governor's 2a' step; §7 headline
+  frequency event with the measured droop line overlaid on the
+  design line; §8 fault gov-on/off time-scale separation; §9 valve
+  ceiling demo; §10 five-way CCT table.
+- ✅ `psse/phase2_3/` — `smib_phase2_3.dyr` (GENROU + ST1A + PSS1A +
+  TGOV1), psspy automation with the PMECH channel, full reference
+  numbers incl. the droop sweep.
+- ✅ **Headline result**: on a −0.2 Hz grid event the rotor slip
+  locks to the grid deviation and **ΔPm = +0.080 pu = −Δω̄/R
+  exactly** (measured droop slope R = 0.0500 vs design 0.05), with
+  the two-step reheat shape (1/3 at valve speed, 2/3 on T3 = 7.5 s)
+  visible on the Pm trace.  **CCT moves only +6 ms (326 → 333 ms)
+  and only in the helpful direction** — near-CCT faults last long
+  enough for the valve's HP fraction to ease Pm off while the rotor
+  accelerates; the five-way CCT table bounds the effect.
 
 ## Confirming the smib black-box
 

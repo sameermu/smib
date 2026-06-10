@@ -15,5 +15,7 @@ from .genrou import GENROU
 from .pll import PLL, preset as pll_preset
 from .pss1a import PSS1A
 from .st1a import ST1A
+from .tgov1 import TGOV1
 
-__all__ = ["Model", "GENCLS", "GENROU", "PLL", "pll_preset", "PSS1A", "ST1A"]
+__all__ = ["Model", "GENCLS", "GENROU", "PLL", "pll_preset", "PSS1A", "ST1A",
+           "TGOV1"]

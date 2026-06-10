@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" role="img"
+     style="font-family:system-ui,-apple-system,sans-serif">
+  <title>TGOV1 — steam turbine governor block diagram</title>
+  <desc>Signal flow: rotor speed deviation is scaled by 1/R and subtracted from Pref, the result drives a first-order valve servo clamped to Vmax/Vmin, the valve position feeds the reheat lead-lag, and turbine damping Dt times speed deviation is subtracted to produce mechanical power Pm.</desc>
+
+  <defs>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <style>
+    .blk  { fill:#eef4fb; stroke:#36608f; stroke-width:1.6; rx:6; }
+    .lim  { fill:#fdf2e7; stroke:#b96a1f; stroke-width:1.6; rx:6; }
+    .sum  { fill:#ffffff; stroke:#333; stroke-width:1.6; }
+    .sig  { stroke:#333; stroke-width:1.6; fill:none; marker-end:url(#arrg); }
+    .lbl  { font-size:15px; fill:#222; }
+    .tf   { font-size:16px; fill:#1d3d5e; font-style:italic; }
+    .nm   { font-size:13px; fill:#666; }
+  </style>
+
+  <!-- input: Delta omega -->
+  <text x="18" y="148" class="lbl">&#x394;&#x3c9;&#x305; (rotor slip, pu)</text>
+  <path class="sig" d="M30 160 L30 175 L92 175"/>
+
+  <!-- 1/R gain -->
+  <rect class="blk" x="92" y="152" width="78" height="46" rx="6"/>
+  <text x="131" y="181" class="tf" text-anchor="middle">1/R</text>
+  <text x="131" y="216" class="nm" text-anchor="middle">droop gain</text>
+  <path class="sig" d="M170 175 L222 175"/>
+
+  <!-- summer -->
+  <circle class="sum" cx="240" cy="175" r="18"/>
+  <text x="228" y="168" class="lbl">&#x2212;</text>
+  <text x="247" y="155" class="lbl">+</text>
+  <!-- Pref input -->
+  <text x="214" y="108" class="lbl">P&#x2009;ref</text>
+  <path class="sig" d="M240 116 L240 157"/>
+  <path class="sig" d="M258 175 L310 175"/>
+
+  <!-- valve servo with limits -->
+  <rect class="lim" x="310" y="142" width="150" height="66" rx="6"/>
+  <text x="385" y="172" class="tf" text-anchor="middle">1 / (1 + sT&#x2081;)</text>
+  <text x="385" y="194" class="nm" text-anchor="middle">Vmin &#x2264; x&#x1d65; &#x2264; Vmax</text>
+  <text x="385" y="230" class="nm" text-anchor="middle">valve servo (non-windup)</text>
+  <path class="sig" d="M460 175 L516 175"/>
+  <text x="486" y="166" class="nm" text-anchor="middle">x&#x1d65;</text>
+
+  <!-- reheat lead-lag -->
+  <rect class="blk" x="516" y="142" width="172" height="66" rx="6"/>
+  <text x="602" y="180" class="tf" text-anchor="middle">(1 + sT&#x2082;) / (1 + sT&#x2083;)</text>
+  <text x="602" y="230" class="nm" text-anchor="middle">reheat (HP fraction T&#x2082;/T&#x2083;)</text>
+  <path class="sig" d="M688 175 L748 175"/>
+
+  <!-- output summer with Dt branch -->
+  <circle class="sum" cx="766" cy="175" r="18"/>
+  <text x="752" y="168" class="lbl">+</text>
+  <text x="772" y="206" class="lbl">&#x2212;</text>
+  <!-- Dt branch -->
+  <rect class="blk" x="726" y="248" width="80" height="42" rx="6"/>
+  <text x="766" y="275" class="tf" text-anchor="middle">D&#x209c;</text>
+  <path class="sig" d="M766 248 L766 193"/>
+  <text x="30" y="280" class="lbl">&#x394;&#x3c9;&#x305;</text>
+  <path class="sig" d="M44 275 L726 269 L726 269"/>
+
+  <!-- output -->
+  <path class="sig" d="M784 175 L880 175"/>
+  <text x="892" y="180" class="lbl">P&#x2098; &#x2192; shaft</text>
+
+  <!-- steady-state annotation -->
+  <text x="92" y="60" class="nm">Steady state: the whole chain passes P&#x2009;ref through unchanged, so &#x394;P&#x2098; = &#x2212;&#x394;&#x3c9;&#x305;/R &#x2014; the droop line.</text>
+  <text x="92" y="80" class="nm">With R = 0.05: a 1% under-frequency commands a 20% rise in mechanical power.</text>
+</svg>
